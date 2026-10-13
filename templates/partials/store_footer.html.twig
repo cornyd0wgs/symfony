@@ -1,0 +1,56 @@
+<!-- =========================================================
+     SITE FOOTER
+========================================================== -->
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <img src="{{ asset('assets/logo.png') }}" alt="Caballero Industries logo" class="footer-logo">
+            <p class="footer-text">
+                Next-generation design systems applied to high-utility tactical outerwear.
+                Forged with resilient materials for modern operators.
+            </p>
+            <div class="footer-social">
+                <a href="#" class="social-icon" aria-label="Instagram">IG</a>
+                <a href="#" class="social-icon" aria-label="Facebook">FB</a>
+                <a href="#" class="social-icon" aria-label="X (Twitter)">X</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4 class="footer-col-title">COMPANY</h4>
+            <ul class="footer-links">
+                <li><a href="{{ path('app_home') }}#home">Home</a></li>
+                <li><a href="{{ path('app_home') }}#about">About Us</a></li>
+                <li><a href="{{ path('app_products') }}">Tactical Vault</a></li>
+                <li><a href="{{ path('app_contact') }}">Contact Comms</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4 class="footer-col-title">COLLECTIONS</h4>
+            <ul class="footer-links">
+                <li><a href="{{ path('app_products') }}">Vests & Outerwear</a></li>
+                <li><a href="{{ path('app_products') }}">Tactical Bags</a></li>
+                <li><a href="{{ path('app_products') }}">Operator Headwear</a></li>
+                <li><a href="{{ path('app_products') }}">Stealth Hoodies</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4 class="footer-col-title">SYSTEM</h4>
+            <ul class="footer-links">
+                <li><a href="{{ path('admin_dashboard') }}">Admin Control Center</a></li>
+                <li><a href="{{ path('admin_products') }}">Inventory Manager</a></li>
+                <li><a href="{{ path('admin_orders') }}">Dispatch Records</a></li>
+                <li><a href="{{ path('admin_customers') }}">Operator Directory</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container footer-bottom-inner">
+            <p>&copy; {{ "now"|date("Y") }} CABALLERO INDUSTRIES. ALL RIGHTS RESERVED.</p>
+            <p class="footer-protocol">SECURE ACCESS // PROTOCOL_V1 // ENCRYPTED_CHANNEL</p>
+        </div>
+    </div>
+</footer>
