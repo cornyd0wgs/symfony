@@ -1,0 +1,297 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Caballero Industries — Built For Purpose. Driven By Innovation.{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <!-- =========================================================
+         HERO // MODERN TACTICAL DROP
+    ========================================================== -->
+    <section class="hero" id="home">
+        <div class="hero-bg" aria-hidden="true">
+            <img src="{{ asset('images/homepagebg.png') }}" alt="Tactical Background" class="hero-bg-img">
+            <div class="hero-overlay"></div>
+        </div>
+
+        <div class="hero-decor hero-decor-left" aria-hidden="true"></div>
+        <div class="hero-decor hero-decor-right" aria-hidden="true"></div>
+
+        <div class="container hero-content">
+            <div class="hero-meta-row">
+                <p class="section-index">CI_CORE_METRICS // 01</p>
+                <p class="hero-coordinate">[ GRID_14.5995N // 120.9842E ]</p>
+            </div>
+
+            <p class="tech-label">// CABALLERO INDUSTRIES</p>
+
+            <h1 class="hero-heading">
+                BUILT FOR<br>
+                <span>PURPOSE.</span><br>
+                DRIVEN BY<br>
+                <span>INNOVATION.</span>
+            </h1>
+
+            <p class="hero-text">
+                High-performance tactical apparel designed to survive the harshest environments.
+                Fusing military-grade durability with futuristic aesthetic and advanced utility.
+            </p>
+
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="#drop" class="btn btn-primary">
+                    EXPLORE ACTIVE DROP <span class="arrow">→</span>
+                </a>
+                <a href="{{ path('app_products') }}" class="btn btn-outline">
+                    VIEW VAULT CATALOG
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         BRAND ETHOS // 50/50 COMPOSITION
+    ========================================================== -->
+    <section class="ethos" id="about">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>BRAND_ETHOS // FIELD_NOTE_01</p>
+            </div>
+
+            <div class="ethos-grid">
+                <div class="ethos-text">
+                    <p class="tech-label">// BRAND ETHOS</p>
+                    <h2 class="section-heading">TACTICAL.<br>FUNCTIONAL.<br>FUTURISTIC.</h2>
+
+                    <p class="body-text">
+                        At Caballero Industries, we build gear for the vanguard. Our products are engineered
+                        using advanced tech-fabrics, modular attachment systems, and weatherproofing designed
+                        to withstand both urban sprawls and rugged terrains. We believe outerwear shouldn't
+                        just look protective — it must perform flawlessly.
+                    </p>
+
+                    <a href="#drop" class="text-link">
+                        EXPLORE SPECIFICATIONS <span class="arrow">→</span>
+                    </a>
+                </div>
+
+                <figure class="ethos-image">
+                    <div class="image-frame-corner image-frame-corner-a" aria-hidden="true"></div>
+                    <div class="image-frame-corner image-frame-corner-b" aria-hidden="true"></div>
+                    <img src="{{ asset('images/tactical jacket.png') }}" alt="Caballero Industries black tactical outerwear">
+                    <figcaption>CI_APPAREL_TEST // OUTERWEAR_01</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         STRATEGIC PRINCIPLES // OPERATIONAL VALUES
+    ========================================================== -->
+    <section class="principles">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>OPERATIONAL_VALUES // 02</p>
+            </div>
+
+            <div class="section-intro section-intro-centered">
+                <p class="tech-label">// STRATEGIC PRINCIPLES</p>
+                <h2 class="section-heading">BUILD DIFFERENT. CREATE IMPACT.</h2>
+            </div>
+
+            <div class="principles-grid">
+                {% for index, principle in principles %}
+                    <article class="principle-card">
+                        <div class="principle-topline">
+                            <span class="principle-number">{{ (index + 1)|format('%02d') }}</span>
+                            <span class="principle-indicator" aria-hidden="true"></span>
+                        </div>
+                        <h3 class="principle-title">{{ principle.title }}</h3>
+                        <p class="principle-text">{{ principle.text }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         OPTION 1: ACTIVE DROP // LIMITED ALLOCATION
+    ========================================================== -->
+    <section class="collection" id="drop">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>ACTIVE_DROP_CYCLE // 03</p>
+            </div>
+
+            <div class="section-intro section-intro-split">
+                <div>
+                    <p class="tech-label">// {{ active_drop_cycle }}</p>
+                    <h2 class="section-heading">ACTIVE TACTICAL DROP</h2>
+                </div>
+
+                <div style="text-align: right;">
+                    <p class="collection-meta">
+                        BATCH_{{ active_drop_number }} // {{ products|length }} ALLOCATIONS ACTIVE
+                    </p>
+                    <span style="display: inline-block; margin-top: 6px; font-size: 10px; color: var(--color-accent); font-family: var(--font-ui); letter-spacing: 0.15em;">
+                        ● LIVE DROP ACTIVE
+                    </span>
+                </div>
+            </div>
+
+            <div class="system-strip" aria-hidden="true">
+                <div class="system-strip-track">
+                    <span>SYS.ACTIVE // DROP_04</span>
+                    <span>LIMITED RUN</span>
+                    <span>CORDURA 1000D</span>
+                    <span>BALLISTIC NYLON</span>
+                    <span>MODULAR ATTACH</span>
+                    <span>WEATHERPROOF DWR</span>
+                    <span>SYS.ACTIVE // DROP_04</span>
+                    <span>LIMITED RUN</span>
+                </div>
+            </div>
+
+            <div class="product-grid">
+                {% for product in products %}
+                    <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-card">
+                        <div class="product-image">
+                            <div class="product-tags">
+                                {% if product.is_popular %}
+                                    <span class="slant-tag slant-tag-popular"><span>POPULAR</span></span>
+                                {% endif %}
+                                {% if product.discount > 0 %}
+                                    <span class="slant-tag slant-tag-sale"><span>-{{ product.discount }}%</span></span>
+                                {% endif %}
+                            </div>
+
+                            {% if product.quantity == 0 %}
+                                <span class="product-tag product-tag-soldout">OUT OF STOCK</span>
+                            {% elseif product.quantity <= 3 %}
+                                <span class="product-tag" style="background: rgba(255, 60, 0, 0.9); color: #fff; border-color: #ff3c00;">
+                                    {{ product.stock_status }}
+                                </span>
+                            {% else %}
+                                <span class="product-tag">{{ product.stock_status }}</span>
+                            {% endif %}
+
+                            <img src="{{ asset(product.image) }}" alt="{{ product.name }}">
+                            <span class="product-corner" aria-hidden="true">CI</span>
+                        </div>
+
+                        <div class="product-info">
+                            <p class="product-code">{{ product.product_code }}</p>
+                            <h3 class="product-name">{{ product.name }}</h3>
+
+                            {% if product.discount_price %}
+                                <p class="product-price">
+                                    <span class="price-old">₱{{ product.price|number_format(2) }}</span>
+                                    ₱{{ product.discount_price|number_format(2) }}
+                                </p>
+                            {% else %}
+                                <p class="product-price">₱{{ product.price|number_format(2) }}</p>
+                            {% endif %}
+
+                            <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                                <small style="font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.1em; text-transform: uppercase;">
+                                    {{ product.units_sold }} UNITS SECURED
+                                </small>
+                                <span style="font-size: 9px; color: var(--color-accent); font-weight: 700; letter-spacing: 0.12em;">
+                                    INSPECT →
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div style="margin-top: 48px; text-align: center;">
+                <a href="{{ path('app_products') }}" class="btn btn-outline">
+                    EXPLORE FULL CATALOG ARCHIVE <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         CINEMATIC VANGUARD BROADCAST // 04
+    ========================================================== -->
+    <section class="feature-cta">
+        <div class="feature-cta-bg" aria-hidden="true">
+            <img src="{{ asset('images/homepagebg.png') }}" alt="" class="hero-bg-img">
+            <div class="feature-cta-overlay"></div>
+        </div>
+
+        <div class="container">
+            <div class="section-rail section-rail-on-image">
+                <span></span>
+                <p>VANGUARD_BROADCAST // 04</p>
+            </div>
+
+            <div class="feature-cta-content">
+                <p class="tech-label">// MANDATE_05</p>
+                <h2 class="feature-cta-heading">DESIGNED FOR THOSE<br>WHO MOVE DIFFERENT.</h2>
+                <a href="{{ path('app_products') }}" class="btn btn-primary">
+                    VIEW COMPLETE VAULT <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         VALIDATED INTEGRATIONS // 05
+    ========================================================== -->
+    <section class="values">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>SYNDICATE_ALLIES // 05</p>
+            </div>
+
+            <div class="section-intro section-intro-centered">
+                <p class="tech-label">// VALIDATED_INTEGRATIONS</p>
+                <h2 class="section-heading">TRUSTED. TESTED. PROVEN.</h2>
+            </div>
+
+            <div class="values-grid">
+                {% for partner in partners %}
+                    <div class="value-block">
+                        <h3 class="value-title">{{ partner.name }}</h3>
+                        <p class="value-text">{{ partner.tag }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         TERMINAL COMMAND // 06
+    ========================================================== -->
+    <section class="final-cta" id="contact-banner">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>TERMINAL_COMMAND // 06</p>
+            </div>
+
+            <div class="final-cta-content">
+                <p class="tech-label">// INITIALIZE_DEPLOYMENT</p>
+                <h2 class="final-cta-heading">BUILD DIFFERENT.<br>CREATE IMPACT.</h2>
+                <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+                    <a href="#drop" class="btn btn-primary">
+                        ACQUIRE DROP GEAR <span class="arrow">→</span>
+                    </a>
+                    <a href="{{ path('app_contact') }}" class="btn btn-outline">
+                        ESTABLISH SECURE COMMS
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

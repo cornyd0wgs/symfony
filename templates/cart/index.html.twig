@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cart Manifest | Caballero Industries{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <section class="collection" style="padding-top: 50px;">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>DEPLOYMENT_MANIFEST // CURRENT_SESSION</p>
+            </div>
+
+            <div class="section-intro section-intro-split">
+                <div>
+                    <p class="tech-label">// ORDER_ACQUISITION</p>
+                    <h2 class="section-heading">CART MANIFEST</h2>
+                </div>
+                <p class="collection-meta">
+                    {{ items|length }} ASSETS PENDING DISPATCH
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(320px, 1fr); gap: 32px; align-items: start;">
+                <!-- Cart Items Table / Cards -->
+                <div style="background: #111518; border: 1px solid var(--color-border); padding: 24px;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--color-border); text-align: left;">
+                                <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em;">GEAR</th>
+                                <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em;">UNIT PRICE</th>
+                                <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em; text-align: center;">QTY</th>
+                                <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em; text-align: right;">SUBTOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 16px 14px;">
+                                        <div style="display: flex; align-items: center; gap: 16px;">
+                                            <img src="{{ asset(item.image) }}" alt="{{ item.name }}" style="width: 56px; height: 56px; object-fit: cover; background: #0c0f11; border: 1px solid var(--color-border);">
+                                            <div>
+                                                <small style="display: block; font-family: var(--font-ui); font-size: 8px; color: var(--color-accent); letter-spacing: 0.14em;">{{ item.product_code }}</small>
+                                                <strong style="display: block; font-size: 13px; color: #fff;">{{ item.name }}</strong>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 16px 14px; font-family: var(--font-heading); font-size: 14px; color: #fff;">
+                                        ₱{{ item.price|number_format(2) }}
+                                    </td>
+                                    <td style="padding: 16px 14px; text-align: center; font-family: var(--font-ui); font-size: 12px; color: #fff;">
+                                        {{ item.quantity }}
+                                    </td>
+                                    <td style="padding: 16px 14px; text-align: right; font-family: var(--font-heading); font-size: 14px; color: var(--color-accent);">
+                                        ₱{{ item.subtotal|number_format(2) }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <a href="{{ path('app_products') }}" class="text-link" style="margin-top: 0;">
+                            ← RETURN TO VAULT
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div style="background: #111518; border: 1px solid var(--color-border); padding: 26px;">
+                    <p class="tech-label" style="margin-bottom: 12px;">// DISPATCH SUMMARY</p>
+                    <h3 style="font-family: var(--font-heading); font-size: 20px; margin-bottom: 22px; text-transform: uppercase;">
+                        ORDER TOTALS
+                    </h3>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 12px; color: var(--color-gray-soft);">
+                        <span>GEAR SUB-TOTAL</span>
+                        <strong style="color: #fff; font-family: var(--font-heading);">₱{{ subtotal|number_format(2) }}</strong>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 12px; color: var(--color-gray-soft);">
+                        <span>SECURE LOGISTICS (PH)</span>
+                        <strong style="color: #fff; font-family: var(--font-heading);">₱{{ shipping|number_format(2) }}</strong>
+                    </div>
+
+                    <div style="height: 1px; background: var(--color-border); margin-bottom: 18px;"></div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 28px; font-size: 14px;">
+                        <span style="font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.1em;">TOTAL ESTIMATE</span>
+                        <strong style="color: var(--color-accent); font-size: 22px; font-family: var(--font-heading);">₱{{ total|number_format(2) }}</strong>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;" onclick="alert('Checkout process initiated via Caballero Industries Secure Logistics.')">
+                        CONFIRM DISPATCH <span class="arrow">→</span>
+                    </button>
+                    <small style="display: block; text-align: center; margin-top: 14px; font-size: 8px; color: #686d70; letter-spacing: 0.1em;">
+                        ENCRYPTED CHECKOUT // PROTOCOL_V1 VERIFIED
+                    </small>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tactical Comms | Caballero Industries{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <section class="collection" style="padding-top: 50px;">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>COMMS_LINK // DIRECT_TRANSMISSION</p>
+            </div>
+
+            <div class="section-intro section-intro-split">
+                <div>
+                    <p class="tech-label">// TRANSMISSION_LINE</p>
+                    <h2 class="section-heading">SECURE CONTACT</h2>
+                </div>
+                <p class="collection-meta">
+                    GRID_REF: {{ coordinates }}
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); gap: 40px;">
+                <div style="background: #111518; border: 1px solid var(--color-border); padding: 32px;">
+                    <p class="tech-label" style="margin-bottom: 12px;">// COMMS FORM</p>
+                    <h3 style="font-family: var(--font-heading); font-size: 22px; margin-bottom: 24px;">TRANSMIT INQUIRY</h3>
+
+                    <form onsubmit="event.preventDefault(); alert('Transmission acknowledged. Operator will respond within 24h.');">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                                CALLSIGN / OPERATOR NAME
+                            </label>
+                            <input type="text" required placeholder="e.g. Marcus Vance" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                                COMMS EMAIL / SECURE CHANNEL
+                            </label>
+                            <input type="email" required placeholder="operator@domain.com" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                        </div>
+
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                                TRANSMISSION MESSAGE
+                            </label>
+                            <textarea rows="5" required placeholder="Specify gear inquiries, custom loadout requests, or operational feedback..." style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px; resize: vertical;"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            SEND TRANSMISSION <span class="arrow">→</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="background: #111518; border: 1px solid var(--color-border); padding: 26px;">
+                        <p class="tech-label" style="margin-bottom: 8px;">// HEADQUARTERS COORDINATES</p>
+                        <h4 style="font-family: var(--font-heading); font-size: 18px; margin-bottom: 12px;">TACTICAL OPERATIONS BASE</h4>
+                        <p style="font-size: 13px; color: var(--color-gray-soft); line-height: 1.7; margin-bottom: 14px;">
+                            Caballero Industries Division<br>
+                            Manila Command Hub<br>
+                            Coordinates: {{ coordinates }}
+                        </p>
+                        <p style="font-family: var(--font-ui); font-size: 9px; color: var(--color-accent); letter-spacing: 0.14em;">
+                            STATUS: SECURE_COMMS_ONLINE
+                        </p>
+                    </div>
+
+                    <div style="background: #111518; border: 1px solid var(--color-border); padding: 26px;">
+                        <p class="tech-label" style="margin-bottom: 8px;">// DIRECT DISPATCH</p>
+                        <h4 style="font-family: var(--font-heading); font-size: 18px; margin-bottom: 12px;">COMMUNICATION PROTOCOLS</h4>
+                        <p style="font-size: 12px; color: var(--color-gray-soft); line-height: 1.8;">
+                            &bull; <strong>Support:</strong> ops@caballero-industries.com<br>
+                            &bull; <strong>Fulfillment:</strong> dispatch@caballero-industries.com<br>
+                            &bull; <strong>Response SLA:</strong> Within 12 operational hours
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

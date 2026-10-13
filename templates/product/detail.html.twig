@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} | Caballero Industries{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <section class="ethos" style="padding-top: 60px;">
+        <div class="container">
+            <div class="section-rail">
+                <span></span>
+                <p>GEAR_SPECIFICATION // {{ product.product_code }}</p>
+            </div>
+
+            <div class="ethos-grid">
+                <figure class="ethos-image">
+                    <div class="image-frame-corner image-frame-corner-a" aria-hidden="true"></div>
+                    <div class="image-frame-corner image-frame-corner-b" aria-hidden="true"></div>
+                    <img src="{{ asset(product.image) }}" alt="{{ product.name }}">
+                    <figcaption>{{ product.product_code }} // {{ product.category }}</figcaption>
+                </figure>
+
+                <div class="ethos-text">
+                    <p class="tech-label">// ASSET SPECIFICATION</p>
+                    <h1 class="section-heading" style="font-size: clamp(28px, 3.2vw, 44px); margin-bottom: 12px;">
+                        {{ product.name }}
+                    </h1>
+
+                    <p style="font-family: var(--font-ui); font-size: 11px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 24px;">
+                        ITEM REF: {{ product.product_code }} &bull; CATEGORY: {{ product.category }}
+                    </p>
+
+                    <div style="margin-bottom: 28px;">
+                        {% if product.discount_price %}
+                            <div style="display: flex; align-items: baseline; gap: 14px;">
+                                <span style="font-size: 28px; font-weight: 900; color: var(--color-accent); font-family: var(--font-heading);">
+                                    ₱{{ product.discount_price|number_format(2) }}
+                                </span>
+                                <span style="font-size: 18px; color: #686d70; text-decoration: line-through; font-family: var(--font-heading);">
+                                    ₱{{ product.price|number_format(2) }}
+                                </span>
+                                <span class="badge-flag" style="font-size: 10px; padding: 4px 8px;">SAVE {{ product.discount }}%</span>
+                            </div>
+                        {% else %}
+                            <span style="font-size: 28px; font-weight: 900; color: var(--color-accent); font-family: var(--font-heading);">
+                                ₱{{ product.price|number_format(2) }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <p class="body-text" style="margin-bottom: 30px;">
+                        {{ product.description }}
+                    </p>
+
+                    <div style="background: #111518; border: 1px solid var(--color-border); padding: 18px 22px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div>
+                            <span style="display: block; font-size: 9px; color: #777d80; letter-spacing: 0.12em; text-transform: uppercase;">STOCK STATUS</span>
+                            <strong style="color: {{ product.quantity == 0 ? '#ff3c00' : (product.quantity <= 3 ? 'var(--color-accent)' : '#fff') }}; font-size: 12px;">
+                                {% if product.quantity == 0 %}OUT OF STOCK{% elseif product.quantity <= 3 %}CRITICAL STOCK ({{ product.quantity }} REMAINING){% else %}IN STOCK ({{ product.quantity }} ALLOCATED){% endif %}
+                            </strong>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 9px; color: #777d80; letter-spacing: 0.12em; text-transform: uppercase;">FIELD VERIFICATION</span>
+                            <strong style="color: #fff; font-size: 12px;">{{ product.units_sold }} UNITS FIELD-TESTED</strong>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                        {% if product.quantity > 0 %}
+                            <a href="{{ path('app_cart') }}" class="btn btn-primary" style="min-width: 200px;">
+                                ALLOCATE TO BAG <span class="arrow">→</span>
+                            </a>
+                        {% else %}
+                            <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                DEPLETED FROM VAULT
+                            </button>
+                        {% endif %}
+                        <a href="{{ path('app_products') }}" class="btn btn-outline">
+                            BACK TO VAULT
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}
