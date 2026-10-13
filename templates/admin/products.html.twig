@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products | Caballero Industries Admin{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    {% include 'partials/sidebar.html.twig' %}
+
+    <main class="admin-main">
+        {% include 'partials/navbar.html.twig' %}
+
+        <section class="admin-content">
+            <div class="page-heading" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <span class="eyebrow">// PRODUCT & STOCK CONTROL</span>
+                    <h1>Products</h1>
+                    <p>Manage product catalog, pricing, discounts, stock levels, and store visibility.</p>
+                </div>
+                <div>
+                    <a href="#" class="admin-btn">+ ADD PRODUCT</a>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-table-scroll">
+                    <table class="admin-dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>CODE</th>
+                                <th>ITEM</th>
+                                <th>PRICE</th>
+                                <th>DISCOUNT</th>
+                                <th>STOCK</th>
+                                <th>STATUS</th>
+                                <th>SOLD</th>
+                                <th>FLAGS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td><strong>{{ product.product_code }}</strong></td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <img src="{{ asset(product.image) }}" alt="" style="width: 32px; height: 32px; object-fit: cover; border: 1px solid var(--border);">
+                                            <span>{{ product.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td>₱{{ product.price|number_format(2) }}</td>
+                                    <td>{{ product.discount > 0 ? product.discount ~ '%' : '—' }}</td>
+                                    <td><b>{{ product.quantity }}</b></td>
+                                    <td>
+                                        {% if product.quantity == 0 %}
+                                            <span class="admin-stock-badge stock-zero">OUT OF STOCK</span>
+                                        {% elseif product.quantity <= 5 %}
+                                            <span class="admin-stock-badge stock-low">LOW STOCK</span>
+                                        {% else %}
+                                            <span class="admin-stock-badge stock-ok">IN STOCK</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ product.units_sold }}</td>
+                                    <td>
+                                        {% if product.is_featured %}
+                                            <span class="badge-flag">FEATURED</span>
+                                        {% endif %}
+                                        {% if product.is_popular %}
+                                            <span class="badge-flag">POPULAR</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 6px;">
+                                            <a href="#" class="admin-row-link">EDIT</a>
+                                            <a href="#" class="admin-row-link">RESTOCK</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

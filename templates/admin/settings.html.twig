@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Settings | Caballero Industries Admin{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    {% include 'partials/sidebar.html.twig' %}
+
+    <main class="admin-main">
+        {% include 'partials/navbar.html.twig' %}
+
+        <section class="admin-content">
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">// CONFIGURATION</span>
+                    <h1>Settings</h1>
+                    <p>System configuration, operational parameters, and store policies.</p>
+                </div>
+            </div>
+
+            <div class="admin-card" style="max-width: 680px;">
+                <div class="admin-card-heading">
+                    <div>
+                        <span>SYSTEM_PARAMETERS // 01</span>
+                        <h2>STORE PREFERENCES</h2>
+                    </div>
+                </div>
+
+                <div style="display: grid; gap: 20px; margin-top: 15px;">
+                    <div>
+                        <label style="display: block; font-size: 10px; color: #858b91; letter-spacing: 0.1em; margin-bottom: 8px;">STORE NAME</label>
+                        <input type="text" value="Caballero Industries" readonly style="width: 100%; background: #0b0d0f; border: 1px solid var(--border); color: #fff; padding: 10px 14px; font-size: 12px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 10px; color: #858b91; letter-spacing: 0.1em; margin-bottom: 8px;">CURRENCY SYMBOL</label>
+                        <input type="text" value="₱ (PHP)" readonly style="width: 100%; background: #0b0d0f; border: 1px solid var(--border); color: #fff; padding: 10px 14px; font-size: 12px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 10px; color: #858b91; letter-spacing: 0.1em; margin-bottom: 8px;">LOW STOCK THRESHOLD</label>
+                        <input type="number" value="5" readonly style="width: 100%; background: #0b0d0f; border: 1px solid var(--border); color: #fff; padding: 10px 14px; font-size: 12px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

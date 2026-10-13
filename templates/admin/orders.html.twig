@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Orders | Caballero Industries Admin{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    {% include 'partials/sidebar.html.twig' %}
+
+    <main class="admin-main">
+        {% include 'partials/navbar.html.twig' %}
+
+        <section class="admin-content">
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">// ORDER MANAGEMENT</span>
+                    <h1>Orders</h1>
+                    <p>Track, process, and manage customer orders and shipment fulfillment.</p>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-table-scroll">
+                    <table class="admin-dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>ORDER ID</th>
+                                <th>CUSTOMER</th>
+                                <th>EMAIL</th>
+                                <th>ITEMS</th>
+                                <th>PAYMENT</th>
+                                <th>TOTAL</th>
+                                <th>STATUS</th>
+                                <th>DATE</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    <td>{{ order.customer_name }}</td>
+                                    <td style="color: #8d9398;">{{ order.customer_email }}</td>
+                                    <td>{{ order.items_count }} items</td>
+                                    <td>{{ order.payment_method }}</td>
+                                    <td><strong>₱{{ order.total_amount|number_format(2) }}</strong></td>
+                                    <td>
+                                        <span class="status-badge status-{{ order.status }}">
+                                            {{ order.status|capitalize }}
+                                        </span>
+                                    </td>
+                                    <td>{{ order.created_at|date('M d, Y') }}</td>
+                                    <td>
+                                        <a href="#" class="admin-row-link">DETAILS</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

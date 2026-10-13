@@ -1,0 +1,297 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard | Caballero Industries{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    {% include 'partials/sidebar.html.twig' %}
+
+    <main class="admin-main">
+        {% include 'partials/navbar.html.twig' %}
+
+        <section class="admin-content">
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">// CONTROL CENTER</span>
+                    <h1>Dashboard</h1>
+                    <p>Overview and operational metrics for Caballero Industries.</p>
+                </div>
+            </div>
+
+            <!-- Top Metric Cards -->
+            <div class="admin-metric-grid">
+                <article class="admin-metric-card">
+                    <div class="admin-metric-icon">01</div>
+                    <div>
+                        <span>TOTAL ORDERS</span>
+                        <strong>{{ metrics.total_orders }}</strong>
+                        <small>{{ metrics.today_orders }} created today</small>
+                    </div>
+                </article>
+
+                <article class="admin-metric-card">
+                    <div class="admin-metric-icon">02</div>
+                    <div>
+                        <span>TOTAL REVENUE</span>
+                        <strong>₱{{ metrics.total_revenue|number_format(2) }}</strong>
+                        <small>₱{{ metrics.today_revenue|number_format(2) }} today</small>
+                    </div>
+                </article>
+
+                <article class="admin-metric-card">
+                    <div class="admin-metric-icon">03</div>
+                    <div>
+                        <span>CUSTOMERS</span>
+                        <strong>{{ metrics.customer_count }}</strong>
+                        <small>Registered user accounts</small>
+                    </div>
+                </article>
+
+                <article class="admin-metric-card {{ metrics.low_stock_count > 0 ? 'alert' : '' }}">
+                    <div class="admin-metric-icon">04</div>
+                    <div>
+                        <span>LOW STOCK ITEMS</span>
+                        <strong>{{ metrics.low_stock_count }}</strong>
+                        <small>{{ metrics.out_of_stock_count }} out of stock</small>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Primary Grid: Revenue Chart + Order Donut Chart -->
+            <div class="admin-primary-grid">
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>REVENUE_ACTIVITY // 01</span>
+                            <h2>REVENUE OVERVIEW</h2>
+                        </div>
+                        <div class="admin-period-chip">LAST 7 DAYS</div>
+                    </div>
+
+                    <div class="admin-revenue-summary">
+                        <div>
+                            <span>TOTAL INCOME</span>
+                            <strong>₱{{ metrics.total_revenue|number_format(2) }}</strong>
+                        </div>
+                        <div>
+                            <span>AVERAGE ORDER</span>
+                            <strong>₱{{ metrics.average_order_value|number_format(2) }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="admin-line-chart">
+                        <svg viewBox="0 0 700 220" role="img" aria-label="Revenue chart">
+                            <defs>
+                                <linearGradient id="revenueArea" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ff6500" stop-opacity="0.32" />
+                                    <stop offset="100%" stop-color="#ff6500" stop-opacity="0" />
+                                </linearGradient>
+                            </defs>
+
+                            <line x1="24" y1="50" x2="676" y2="50" class="chart-grid-line" />
+                            <line x1="24" y1="110" x2="676" y2="110" class="chart-grid-line" />
+                            <line x1="24" y1="170" x2="676" y2="170" class="chart-grid-line" />
+
+                            <polygon points="{{ svg_points }} 676,196 24,196" class="chart-area" />
+                            <polyline points="{{ svg_points }}" class="chart-line" />
+
+                            {% for point in chart_points %}
+                                <circle cx="{{ point.x }}" cy="{{ point.y }}" r="4" class="chart-point" />
+                            {% endfor %}
+                        </svg>
+
+                        <div class="admin-chart-labels">
+                            {% for point in chart_points %}
+                                <span>{{ point.date }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>FULFILLMENT // 02</span>
+                            <h2>ORDER STATUS</h2>
+                        </div>
+                    </div>
+
+                    <div class="admin-status-content">
+                        <div class="admin-status-donut" style="--completed-end: {{ completed_deg }}deg; --processing-end: {{ processing_deg }}deg; --pending-end: {{ pending_deg }}deg;">
+                            <div>
+                                <strong>{{ metrics.total_orders }}</strong>
+                                <span>Total Orders</span>
+                            </div>
+                        </div>
+
+                        <div class="admin-status-legend">
+                            {% for status, count in status_counts %}
+                                {% set percent = (count / status_total) * 100 %}
+                                <div>
+                                    <span class="legend-dot legend-{{ status }}"></span>
+                                    <b>{{ status|capitalize }}</b>
+                                    <strong>{{ count }}</strong>
+                                    <small>{{ percent|number_format(1) }}%</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Secondary Grid: Recent Orders & Top Selling Products -->
+            <div class="admin-secondary-grid">
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>TRANSACTION_LOG // 03</span>
+                            <h2>RECENT ORDERS</h2>
+                        </div>
+                        <a href="{{ path('admin_orders') }}">VIEW ALL →</a>
+                    </div>
+
+                    <div class="admin-table-scroll">
+                        <table class="admin-dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>ORDER</th>
+                                    <th>CUSTOMER</th>
+                                    <th>DATE</th>
+                                    <th>TOTAL</th>
+                                    <th>STATUS</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.customer }}</td>
+                                        <td>{{ order.date }}</td>
+                                        <td>₱{{ order.amount|number_format(2) }}</td>
+                                        <td>
+                                            <span class="status-badge status-{{ order.status }}">
+                                                {{ order.status|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a class="admin-row-link" href="{{ path('admin_orders') }}">VIEW</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>TOP_MOVERS // 04</span>
+                            <h2>TOP SELLING PRODUCTS</h2>
+                        </div>
+                        <a href="{{ path('admin_products') }}">VIEW ALL →</a>
+                    </div>
+
+                    <div class="admin-product-rank-list">
+                        {% for index, product in top_products %}
+                            <div class="admin-product-rank-row">
+                                <span class="rank-number">{{ loop.index }}</span>
+                                <img src="{{ asset(product.image) }}" alt="{{ product.name }}">
+                                <div>
+                                    <strong>{{ product.name }}</strong>
+                                    <small>₱{{ product.revenue|number_format(2) }} revenue</small>
+                                </div>
+                                <b>{{ product.units_sold }} sold</b>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+
+            <!-- Bottom Grid: Inventory Watch, Recent Reviews, Quick Actions -->
+            <div class="admin-bottom-grid">
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>STOCK_WATCH // 05</span>
+                            <h2>INVENTORY STATUS</h2>
+                        </div>
+                        <a href="{{ path('admin_products') }}">VIEW ALL →</a>
+                    </div>
+
+                    <div class="admin-inventory-list">
+                        {% for item in stock_watch %}
+                            <div class="admin-inventory-row">
+                                <img src="{{ asset(item.image) }}" alt="{{ item.name }}">
+                                <div>
+                                    <strong>{{ item.name }}</strong>
+                                    <small>{{ item.code }}</small>
+                                </div>
+                                <b>{{ item.quantity }}</b>
+                                <span class="admin-stock-badge {{ item.status_class }}">{{ item.status }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>FEEDBACK_FEED // 06</span>
+                            <h2>RECENT REVIEWS</h2>
+                        </div>
+                        <a href="{{ path('admin_reviews') }}">VIEW ALL →</a>
+                    </div>
+
+                    <div class="admin-review-feed">
+                        {% for review in recent_reviews %}
+                            <article>
+                                <div class="admin-review-avatar">
+                                    {{ review.customer|slice(0, 1) }}
+                                </div>
+                                <div>
+                                    <div class="admin-review-meta">
+                                        <strong>{{ review.customer }}</strong>
+                                        <span>★ {{ review.rating }}.0</span>
+                                    </div>
+                                    <small>{{ review.product }} · {{ review.date }}</small>
+                                    <p>{{ review.comment }}</p>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="admin-card">
+                    <div class="admin-card-heading">
+                        <div>
+                            <span>COMMAND_SHORTCUTS // 07</span>
+                            <h2>QUICK ACTIONS</h2>
+                        </div>
+                    </div>
+
+                    <div class="admin-quick-actions">
+                        <a href="{{ path('admin_products') }}">
+                            <span>+</span>
+                            <b>MANAGE PRODUCTS</b>
+                        </a>
+                        <a href="{{ path('admin_orders') }}">
+                            <span>↗</span>
+                            <b>VIEW ORDERS</b>
+                        </a>
+                        <a href="{{ path('admin_customers') }}">
+                            <span>◎</span>
+                            <b>VIEW CUSTOMERS</b>
+                        </a>
+                        <a href="{{ path('admin_reviews') }}">
+                            <span>◇</span>
+                            <b>VIEW REVIEWS</b>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+<aside class="admin-sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="brand-mark">
+            C
+        </div>
+
+        <div class="brand-text">
+            <strong>CABALLERO</strong>
+            <span>INDUSTRIES</span>
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <div class="nav-label">
+            MAIN
+        </div>
+
+        <a href="{{ path('admin_dashboard') }}" class="nav-item {{ current_page|default('') == 'dashboard' ? 'active' : '' }}">
+            <span>▣</span>
+            Dashboard
+        </a>
+
+        <a href="{{ path('admin_products') }}" class="nav-item {{ current_page|default('') == 'products' ? 'active' : '' }}">
+            <span>□</span>
+            Products
+        </a>
+
+        <a href="{{ path('admin_orders') }}" class="nav-item {{ current_page|default('') == 'orders' ? 'active' : '' }}">
+            <span>▤</span>
+            Orders
+        </a>
+
+
+        <div class="nav-label">
+            MANAGEMENT
+        </div>
+
+        <a href="{{ path('admin_customers') }}" class="nav-item {{ current_page|default('') == 'customers' ? 'active' : '' }}">
+            <span>◎</span>
+            Customers
+        </a>
+
+        <a href="{{ path('admin_reviews') }}" class="nav-item {{ current_page|default('') == 'reviews' ? 'active' : '' }}">
+            <span>◇</span>
+            Reviews
+        </a>
+
+
+        <div class="nav-label">
+            SYSTEM
+        </div>
+
+        <a href="{{ path('admin_settings') }}" class="nav-item {{ current_page|default('') == 'settings' ? 'active' : '' }}">
+            <span>⚙</span>
+            Settings
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        <div class="system-status">
+            <span></span>
+            SYSTEM ONLINE
+        </div>
+
+        <small>
+            CABALLERO ADMIN v1.0
+        </small>
+
+    </div>
+
+</aside>

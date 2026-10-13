@@ -1,0 +1,42 @@
+<header class="admin-navbar">
+
+    <div class="navbar-left">
+
+        <span class="breadcrumb">
+            ADMIN
+        </span>
+
+        <span class="separator">
+            /
+        </span>
+
+        <span class="current-page">
+            {{ (current_page|default('DASHBOARD'))|upper }}
+        </span>
+
+    </div>
+
+
+    <div class="navbar-right">
+
+        <div class="status">
+            <span></span>
+            ONLINE
+        </div>
+
+        <div class="admin-profile">
+
+            <div class="profile-icon">
+                A
+            </div>
+
+            <div>
+                <strong>ADMIN</strong>
+                <small>Administrator</small>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>

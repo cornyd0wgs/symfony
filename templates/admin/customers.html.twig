@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Customers | Caballero Industries Admin{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    {% include 'partials/sidebar.html.twig' %}
+
+    <main class="admin-main">
+        {% include 'partials/navbar.html.twig' %}
+
+        <section class="admin-content">
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">// USER DIRECTORY</span>
+                    <h1>Customers</h1>
+                    <p>Registered customer directory, order history, and account activity.</p>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-table-scroll">
+                    <table class="admin-dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>CUSTOMER</th>
+                                <th>EMAIL</th>
+                                <th>AGE</th>
+                                <th>ORDERS</th>
+                                <th>TOTAL SPENT</th>
+                                <th>JOINED</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for customer in customers %}
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="admin-review-avatar" style="width: 28px; height: 28px; font-size: 8px;">
+                                                {{ customer.full_name|slice(0, 1) }}
+                                            </div>
+                                            <strong>{{ customer.full_name }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>{{ customer.email }}</td>
+                                    <td>{{ customer.age }} yrs</td>
+                                    <td><b>{{ customer.order_count }}</b> orders</td>
+                                    <td><strong>₱{{ customer.total_spent|number_format(2) }}</strong></td>
+                                    <td>{{ customer.created_at|date('M d, Y') }}</td>
+                                    <td>
+                                        <a href="#" class="admin-row-link">PROFILE</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
