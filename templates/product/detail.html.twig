@@ -68,9 +68,12 @@
 
                     <div style="display: flex; gap: 14px; flex-wrap: wrap;">
                         {% if product.quantity > 0 %}
-                            <a href="{{ path('app_cart') }}" class="btn btn-primary" style="min-width: 200px;">
-                                ALLOCATE TO BAG <span class="arrow">→</span>
-                            </a>
+                            <form method="post" action="{{ path('app_cart_add', {id: product.id}) }}" style="display: inline;">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-primary" style="min-width: 200px;">
+                                    ALLOCATE TO BAG <span class="arrow">→</span>
+                                </button>
+                            </form>
                         {% else %}
                             <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">
                                 DEPLETED FROM VAULT

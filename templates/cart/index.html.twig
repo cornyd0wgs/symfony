@@ -92,9 +92,11 @@
                         <strong style="color: var(--color-accent); font-size: 22px; font-family: var(--font-heading);">₱{{ total|number_format(2) }}</strong>
                     </div>
 
-                    <button class="btn btn-primary" style="width: 100%;" onclick="alert('Checkout process initiated via Caballero Industries Secure Logistics.')">
-                        CONFIRM DISPATCH <span class="arrow">→</span>
-                    </button>
+                    <form method="post" action="{{ path('app_cart_checkout') }}">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            CONFIRM DISPATCH <span class="arrow">→</span>
+                        </button>
+                    </form>
                     <small style="display: block; text-align: center; margin-top: 14px; font-size: 8px; color: #686d70; letter-spacing: 0.1em;">
                         ENCRYPTED CHECKOUT // PROTOCOL_V1 VERIFIED
                     </small>

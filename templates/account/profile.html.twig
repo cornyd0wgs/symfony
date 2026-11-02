@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile & Security | Caballero Industries{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <section class="account-shell" style="padding-top: 50px; padding-bottom: 80px;">
+        <div class="container">
+            <section class="account-page-heading" style="margin-bottom: 30px;">
+                <p class="tech-label">// OPERATOR CREDENTIALS // ACCESS CONFIG</p>
+                <h1 class="section-heading" style="font-size: 36px; margin-bottom: 10px;">PROFILE & SECURITY</h1>
+                <p class="body-text">Update your identity data, communication channel, and account passcode.</p>
+            </section>
+
+            {% include 'partials/account_nav.html.twig' %}
+
+            <div style="background: #111518; border: 1px solid var(--color-border); padding: 32px; max-width: 640px; margin-top: 30px;">
+                {% if success %}
+                    <div class="form-message form-message-success" style="color: #9ad7a2; border: 1px solid #2d4932; background: rgba(95,180,106,.07); padding: 12px 14px; margin-bottom: 20px; font-size: 13px;">
+                        {{ success }}
+                    </div>
+                {% endif %}
+
+                {% if errors is not empty %}
+                    <ul class="form-message form-message-error" style="color: #ff9d6e; border: 1px solid #592e18; background: rgba(255,106,0,.05); padding: 12px 14px 12px 30px; margin-bottom: 20px; font-size: 13px;">
+                        {% for err in errors %}
+                            <li>{{ err }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form method="post" action="{{ path('app_account_profile') }}" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div>
+                        <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                            OPERATOR NAME
+                        </label>
+                        <input type="text" name="full_name" required value="{{ user.full_name }}" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                            SECURE EMAIL
+                        </label>
+                        <input type="email" name="email" required value="{{ user.email }}" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                            OPERATOR AGE
+                        </label>
+                        <input type="number" name="age" min="1" max="120" value="{{ user.age }}" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    </div>
+
+                    <div style="border-top: 1px solid var(--color-border); padding-top: 20px; margin-top: 10px;">
+                        <span style="display: block; font-family: var(--font-ui); font-size: 11px; color: var(--color-accent); letter-spacing: 0.14em; margin-bottom: 14px;">// UPDATE PASSCODE (OPTIONAL)</span>
+
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div>
+                                <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                                    NEW PASSCODE
+                                </label>
+                                <input type="password" name="new_password" minlength="8" placeholder="Leave empty to keep current" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                            </div>
+
+                            <div>
+                                <label style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 8px;">
+                                    CONFIRM NEW PASSCODE
+                                </label>
+                                <input type="password" name="confirm_password" minlength="8" placeholder="Confirm new passcode" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; align-self: flex-start;">
+                        SAVE MODIFICATIONS <span class="arrow">→</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

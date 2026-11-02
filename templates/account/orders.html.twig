@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Orders | Caballero Industries{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <section class="account-shell" style="padding-top: 50px; padding-bottom: 80px;">
+        <div class="container">
+            <section class="account-page-heading" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <p class="tech-label">// ORDER HISTORY // CUSTOMER RECORD</p>
+                    <h1 class="section-heading" style="font-size: 36px; margin-bottom: 10px;">MY ORDERS</h1>
+                    <p class="body-text">Follow the status and value of every order placed with Caballero Industries.</p>
+                </div>
+                <a href="{{ path('app_products') }}" class="btn btn-outline">SHOP COLLECTION →</a>
+            </section>
+
+            {% include 'partials/account_nav.html.twig' %}
+
+            <div style="background: #111518; border: 1px solid var(--color-border); padding: 24px; margin-top: 30px;">
+                {% if orders is empty %}
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <strong style="display: block; font-family: var(--font-heading); font-size: 18px; color: #fff; margin-bottom: 8px;">YOUR ORDER HISTORY IS EMPTY</strong>
+                        <p style="color: var(--color-gray-soft); font-size: 13px; margin-bottom: 20px;">Once you complete checkout, your orders will be recorded here.</p>
+                        <a href="{{ path('app_products') }}" class="btn btn-primary">EXPLORE COLLECTION →</a>
+                    </div>
+                {% else %}
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        {% for order in orders %}
+                            <article style="border: 1px solid var(--color-border); padding: 20px; background: #0c0f11; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; align-items: center;">
+                                <div>
+                                    <span style="display: block; font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.14em;">ORDER REF</span>
+                                    <strong style="font-family: var(--font-heading); font-size: 16px; color: #fff;">#{{ order.id }}</strong>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.14em;">DISPATCH DATE</span>
+                                    <strong style="font-size: 12px; color: #fff;">{{ order.created_at|date('M d, Y') }}</strong>
+                                    <small style="display: block; font-size: 10px; color: #777;">{{ order.created_at|date('h:i A') }}</small>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.14em;">RECIPIENT & LOCATION</span>
+                                    <strong style="font-size: 12px; color: #fff;">{{ order.recipient_name }}</strong>
+                                    <small style="display: block; font-size: 10px; color: #777;">{{ order.city }}, {{ order.province }}</small>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.14em;">PAYMENT METHOD</span>
+                                    <strong style="font-size: 12px; color: #fff;">{{ order.payment_method }}</strong>
+                                    {% if order.gcash_reference %}
+                                        <small style="display: block; font-size: 10px; color: var(--color-accent);">Ref: {{ order.gcash_reference }}</small>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.14em;">TOTAL AMOUNT</span>
+                                    <strong style="font-family: var(--font-heading); font-size: 16px; color: var(--color-accent);">₱{{ order.total_amount|number_format(2) }}</strong>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.14em;">LOGISTICS STATUS</span>
+                                    <span class="admin-badge admin-badge-{{ order.status }}">{{ order.status|upper }}</span>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

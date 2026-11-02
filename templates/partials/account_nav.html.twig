@@ -1,0 +1,11 @@
+<nav class="account-tabs" aria-label="Account sections">
+    <a href="{{ path('app_account_dashboard') }}" class="account-tab {{ account_tab|default('overview') == 'overview' ? 'active' : '' }}">
+        OVERVIEW
+    </a>
+    <a href="{{ path('app_account_orders') }}" class="account-tab {{ account_tab|default('') == 'orders' ? 'active' : '' }}">
+        MY ORDERS
+    </a>
+    <a href="{{ path('app_account_profile') }}" class="account-tab {{ account_tab|default('') == 'profile' ? 'active' : '' }}">
+        PROFILE & SECURITY
+    </a>
+</nav>

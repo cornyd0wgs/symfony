@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     hamburgerBtn.setAttribute('aria-expanded', 'false');
   }
 
-  
-
   function toggleMenu() {
     const isOpen = mainNav.classList.toggle('is-open');
     hamburgerBtn.classList.toggle('is-active', isOpen);

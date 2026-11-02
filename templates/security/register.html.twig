@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register Operator | Caballero Industries{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main">
+    <section class="auth-section">
+        <div class="container auth-container" style="max-width: 480px; margin: 0 auto; padding-top: 40px; padding-bottom: 80px;">
+            <p class="tech-label">// NEW_OPERATOR_REGISTRATION</p>
+            <h1 class="section-heading" style="font-size: 32px; margin-bottom: 24px;">CREATE ACCOUNT</h1>
+
+            {% if errors is not empty %}
+                <ul class="form-message form-message-error" style="color: #ff9d6e; border: 1px solid #592e18; background: rgba(255,106,0,.05); padding: 12px 14px 12px 30px; margin-bottom: 20px; font-size: 13px;">
+                    {% for err in errors %}
+                        <li>{{ err }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form class="auth-form" method="post" action="{{ path('app_register') }}" style="display: flex; flex-direction: column; gap: 18px;">
+                <div class="form-row">
+                    <label for="full_name" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
+                        OPERATOR FULL NAME
+                    </label>
+                    <input type="text" id="full_name" name="full_name" required value="{{ data.full_name|default('') }}" placeholder="e.g. Elena Rostova" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                </div>
+
+                <div class="form-row">
+                    <label for="email" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
+                        COMMS EMAIL
+                    </label>
+                    <input type="email" id="email" name="email" required value="{{ data.email|default('') }}" placeholder="operator@domain.com" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                </div>
+
+                <div class="form-row">
+                    <label for="age" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
+                        AGE
+                    </label>
+                    <input type="number" id="age" name="age" min="1" max="120" required value="{{ data.age|default('') }}" placeholder="28" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                </div>
+
+                <div class="form-row">
+                    <label for="password" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
+                        SECURITY PASSCODE (MIN. 8 CHARS)
+                    </label>
+                    <input type="password" id="password" name="password" minlength="8" required placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                </div>
+
+                <div class="form-row">
+                    <label for="confirm_password" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
+                        CONFIRM PASSCODE
+                    </label>
+                    <input type="password" id="confirm_password" name="confirm_password" minlength="8" required placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
+                    INITIALIZE ACCOUNT <span class="arrow">→</span>
+                </button>
+            </form>
+
+            <div class="auth-switch" style="margin-top: 24px; text-align: center; font-size: 11px; color: var(--color-gray);">
+                Already have an operator account? <a href="{{ path('app_login') }}" style="color: var(--color-accent); font-weight: 700;">Sign in here</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

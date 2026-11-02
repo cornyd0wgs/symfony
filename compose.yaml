@@ -1,7 +1,7 @@
 services:
-  webdev-mysql:
+  industries_mysql:
     image: mysql:8.0
-    container_name: webdev-mysql
+    container_name: industries_mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -11,25 +11,25 @@ services:
     ports:
       - "3310:3306"
     volumes:
-      - webdev-db-data:/var/lib/mysql
+      - industries_db_data:/var/lib/mysql
     networks:
-      - webdev-network
+      - industries_network
 
-  webdev-phpmyadmin:
+  industries_phpmyadmin:
     image: phpmyadmin
-    container_name: webdev-phpmyadmin
+    container_name: industries_phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: webdev-mysql
+      PMA_HOST: industries_mysql
     ports:
       - "8081:80"
     depends_on:
-      - webdev-mysql
+      - industries_mysql
     networks:
-      - webdev-network
+      - industries_network
 
 volumes:
-  webdev-db-data:
+  industries_db_data:
 
 networks:
-  webdev-network:
+  industries_network:

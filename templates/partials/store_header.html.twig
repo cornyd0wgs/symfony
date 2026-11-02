@@ -71,14 +71,50 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="{{ path('admin_dashboard') }}"
-                       class="nav-link"
-                       data-nav-key="admin"
-                       style="color: var(--color-accent); font-weight: 800;">
-                        // ADMIN
-                    </a>
-                </li>
+                {% if app.session.get('user_role') == 'admin' %}
+                    <li>
+                        <a href="{{ path('admin_dashboard') }}"
+                           class="nav-link"
+                           data-nav-key="admin"
+                           style="color: var(--color-accent); font-weight: 800;">
+                            // ADMIN
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_logout') }}" class="nav-link" data-nav-key="logout">
+                            LOGOUT
+                        </a>
+                    </li>
+                {% elseif app.session.has('user_id') %}
+                    <li>
+                        <a href="{{ path('app_account_dashboard') }}"
+                           class="nav-link {{ current_page|default('') == 'account' ? 'active' : '' }}"
+                           data-nav-key="account">
+                            ACCOUNT
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_logout') }}" class="nav-link" data-nav-key="logout">
+                            LOGOUT
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ path('app_login') }}"
+                           class="nav-link {{ current_page|default('') == 'login' ? 'active' : '' }}"
+                           data-nav-key="login">
+                            LOGIN
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('admin_dashboard') }}"
+                           class="nav-link"
+                           data-nav-key="admin"
+                           style="color: var(--color-accent); font-weight: 800;">
+                            // ADMIN
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
             <div class="nav-active-indicator" id="navIndicator" aria-hidden="true"></div>
         </nav>
