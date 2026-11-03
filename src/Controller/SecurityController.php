@@ -2,91 +2,113 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class SecurityController extends AbstractController
 {
-    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
-    public function login(Request $request, SessionInterface $session): Response
+    #[Route('/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $error = null;
-        $email = '';
-
-        if ($request->isMethod('POST')) {
-            $email = trim((string) $request->request->get('email'));
-            $password = (string) $request->request->get('password');
-
-            if ($email === '' || $password === '') {
-                $error = 'Please enter both email and password.';
-            } else {
-                // Check demo credentials or accept simulated login
-                if ($email === 'admin@caballeroindustries.com' && $password === 'Admin123!') {
-                    $session->set('user_id', 1);
-                    $session->set('user_name', 'Site Admin');
-                    $session->set('user_role', 'admin');
-                    $this->addFlash('success', 'Logged in as Administrator.');
-                    return $this->redirectToRoute('admin_dashboard');
-                } else {
-                    // Regular customer session login simulation
-                    $session->set('user_id', 2);
-                    $session->set('user_name', strstr($email, '@', true) ?: 'Tactical Operator');
-                    $session->set('user_role', 'customer');
-                    $this->addFlash('success', 'Authentication verified. Welcome to Caballero Industries.');
-                    return $this->redirectToRoute('app_account_dashboard');
-                }
+        // If user is already authenticated, redirect based on role
+        if ($this->getUser()) {
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('admin_dashboard');
             }
+            return $this->redirectToRoute('app_account_dashboard');
         }
+
+        // Get login error if any
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // Last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
             'current_page' => 'login',
-            'last_username' => $email,
-            'error' => $error,
+            'last_username' => $lastUsername,
+            'error' => $error ? $error->getMessageKey() : null,
         ]);
     }
 
-    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
-    public function register(Request $request, SessionInterface $session): Response
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): void
     {
+        // Intercepted by Symfony's firewall logout key
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager
+    ): Response {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_account_dashboard');
+        }
+
         $errors = [];
         $data = [
-            'full_name' => '',
+            'first_name' => '',
+            'last_name' => '',
             'email' => '',
-            'age' => '',
+            'phone' => '',
         ];
 
         if ($request->isMethod('POST')) {
-            $data['full_name'] = trim((string) $request->request->get('full_name'));
+            $data['first_name'] = trim((string) $request->request->get('first_name'));
+            $data['last_name'] = trim((string) $request->request->get('last_name'));
             $data['email'] = trim((string) $request->request->get('email'));
-            $data['age'] = trim((string) $request->request->get('age'));
+            $data['phone'] = trim((string) $request->request->get('phone'));
             $password = (string) $request->request->get('password');
             $confirmPassword = (string) $request->request->get('confirm_password');
 
-            if (empty($data['full_name'])) {
-                $errors[] = 'Please enter your full name.';
+            if (empty($data['first_name'])) {
+                $errors[] = 'First name is required.';
+            }
+            if (empty($data['last_name'])) {
+                $errors[] = 'Last name is required.';
             }
             if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                 $errors[] = 'Please provide a valid email address.';
             }
-            if (!is_numeric($data['age']) || (int) $data['age'] < 1 || (int) $data['age'] > 120) {
-                $errors[] = 'Age must be between 1 and 120.';
-            }
             if (strlen($password) < 8) {
-                $errors[] = 'Password must be at least 8 characters.';
+                $errors[] = 'Password must be at least 8 characters long.';
             }
             if ($password !== $confirmPassword) {
                 $errors[] = 'Passwords do not match.';
             }
 
+            // Check if email already exists
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['email']]);
+            if ($existingUser) {
+                $errors[] = 'An account with this email address already exists.';
+            }
+
             if (empty($errors)) {
-                $session->set('user_id', 10);
-                $session->set('user_name', $data['full_name']);
-                $session->set('user_role', 'customer');
-                $this->addFlash('success', 'Account created successfully. Welcome to Caballero Industries.');
-                return $this->redirectToRoute('app_account_dashboard');
+                $user = new User();
+                $user->setEmail($data['email'])
+                    ->setFirstname($data['first_name'])
+                    ->setLastname($data['last_name'])
+                    ->setPhone($data['phone'] ?: null)
+                    ->setStatus('active')
+                    ->setRoles(['ROLE_USER'])
+                    ->setCreatedat(new \DateTimeImmutable());
+
+                $hashedPassword = $passwordHasher->hashPassword($user, $password);
+                $user->setPassword($hashedPassword);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Tactical clearance issued. Account registered successfully. Please sign in.');
+                return $this->redirectToRoute('app_login');
             }
         }
 
@@ -95,13 +117,5 @@ final class SecurityController extends AbstractController
             'errors' => $errors,
             'data' => $data,
         ]);
-    }
-
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(SessionInterface $session): Response
-    {
-        $session->clear();
-        $this->addFlash('info', 'Secure session terminated.');
-        return $this->redirectToRoute('app_home');
     }
 }

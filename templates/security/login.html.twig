@@ -24,6 +24,8 @@
             {% endif %}
 
             <form class="auth-form" method="post" action="{{ path('app_login') }}" style="display: flex; flex-direction: column; gap: 18px;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
                 <div class="form-row">
                     <label for="email" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
                         OPERATOR EMAIL
