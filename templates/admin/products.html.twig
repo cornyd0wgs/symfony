@@ -40,32 +40,28 @@
                         <tbody>
                             {% for product in products %}
                                 <tr>
-                                    <td><strong>{{ product.product_code }}</strong></td>
+                                    <td><strong>{{ product.sku }}</strong></td>
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 10px;">
-                                            <img src="{{ asset(product.image) }}" alt="" style="width: 32px; height: 32px; object-fit: cover; border: 1px solid var(--border);">
                                             <span>{{ product.name }}</span>
                                         </div>
                                     </td>
-                                    <td>₱{{ product.price|number_format(2) }}</td>
-                                    <td>{{ product.discount > 0 ? product.discount ~ '%' : '—' }}</td>
-                                    <td><b>{{ product.quantity }}</b></td>
+                                    <td>₱{{ product.baseprice|number_format(2) }}</td>
+                                    <td>{{ product.discountPercent > 0 ? product.discountPercent ~ '%' : '—' }}</td>
+                                    <td><b>{{ product.totalStock }}</b></td>
                                     <td>
-                                        {% if product.quantity == 0 %}
+                                        {% if product.totalStock == 0 %}
                                             <span class="admin-stock-badge stock-zero">OUT OF STOCK</span>
-                                        {% elseif product.quantity <= 5 %}
+                                        {% elseif product.totalStock <= 5 %}
                                             <span class="admin-stock-badge stock-low">LOW STOCK</span>
                                         {% else %}
                                             <span class="admin-stock-badge stock-ok">IN STOCK</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ product.units_sold }}</td>
+                                    <td>{{ product.variants|length }} variants</td>
                                     <td>
-                                        {% if product.is_featured %}
+                                        {% if product.isfeatured %}
                                             <span class="badge-flag">FEATURED</span>
-                                        {% endif %}
-                                        {% if product.is_popular %}
-                                            <span class="badge-flag">POPULAR</span>
                                         {% endif %}
                                     </td>
                                     <td>

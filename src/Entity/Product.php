@@ -49,6 +49,26 @@ class Product
     #[ORM\OneToMany(targetEntity: ProductVariant::class, mappedBy: 'product', orphanRemoval: true)]
     private Collection $variants;
 
+    public function getTotalStock(): int
+    {
+        $total = 0;
+        foreach ($this->variants as $variant) {
+            $total += $variant->getStockquantity() ?? 0;
+        }
+        return $total;
+    }
+
+    public function getDiscountPercent(): int
+    {
+        if ($this->saleprice !== null && (float) $this->baseprice > 0) {
+            $diff = (float) $this->baseprice - (float) $this->saleprice;
+            if ($diff > 0) {
+                return (int) round(($diff / (float) $this->baseprice) * 100);
+            }
+        }
+        return 0;
+    }
+
     /**
      * @var Collection<int, Review>
      */

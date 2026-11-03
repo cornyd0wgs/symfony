@@ -29,44 +29,44 @@
                     <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-card">
                         <div class="product-image">
                             <div class="product-tags">
-                                {% if product.is_popular %}
-                                    <span class="slant-tag slant-tag-popular"><span>POPULAR</span></span>
+                                {% if product.isfeatured %}
+                                    <span class="slant-tag slant-tag-popular"><span>FEATURED</span></span>
                                 {% endif %}
-                                {% if product.discount > 0 %}
-                                    <span class="slant-tag slant-tag-sale"><span>-{{ product.discount }}%</span></span>
+                                {% if product.discountPercent > 0 %}
+                                    <span class="slant-tag slant-tag-sale"><span>-{{ product.discountPercent }}%</span></span>
                                 {% endif %}
                             </div>
 
-                            {% if product.quantity == 0 %}
+                            {% if product.totalStock == 0 %}
                                 <span class="product-tag product-tag-soldout">OUT OF STOCK</span>
-                            {% elseif product.quantity <= 3 %}
+                            {% elseif product.totalStock <= 3 %}
                                 <span class="product-tag" style="background: rgba(255, 60, 0, 0.9); color: #fff; border-color: #ff3c00;">
-                                    ONLY {{ product.quantity }} LEFT
+                                    ONLY {{ product.totalStock }} LEFT
                                 </span>
                             {% else %}
                                 <span class="product-tag">IN STOCK</span>
                             {% endif %}
 
-                            <img src="{{ asset(product.image) }}" alt="{{ product.name }}">
+                            <img src="{{ asset('images/jacket.png') }}" alt="{{ product.name }}">
                             <span class="product-corner" aria-hidden="true">CI</span>
                         </div>
 
                         <div class="product-info">
-                            <p class="product-code">{{ product.product_code }}</p>
+                            <p class="product-code">{{ product.sku }}</p>
                             <h3 class="product-name">{{ product.name }}</h3>
 
-                            {% if product.discount_price %}
+                            {% if product.saleprice %}
                                 <p class="product-price">
-                                    <span class="price-old">₱{{ product.price|number_format(2) }}</span>
-                                    ₱{{ product.discount_price|number_format(2) }}
+                                    <span class="price-old">₱{{ product.baseprice|number_format(2) }}</span>
+                                    ₱{{ product.saleprice|number_format(2) }}
                                 </p>
                             {% else %}
-                                <p class="product-price">₱{{ product.price|number_format(2) }}</p>
+                                <p class="product-price">₱{{ product.baseprice|number_format(2) }}</p>
                             {% endif %}
 
                             <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
                                 <small style="font-size: 9px; color: var(--color-gray-soft); letter-spacing: 0.1em; text-transform: uppercase;">
-                                    {{ product.category }}
+                                    {{ product.category ? product.category.name : 'Tactical Gear' }}
                                 </small>
                                 <span style="font-size: 9px; color: var(--color-accent); font-weight: 700; letter-spacing: 0.12em;">
                                     INSPECT →
