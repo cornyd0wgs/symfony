@@ -30,7 +30,7 @@
 
         {% block scripts %}
             {% if not (app.request.pathInfo starts with '/admin') %}
-                <script src="{{ asset('script.js') }}"></script>
+                <script src="/script.js"></script>
             {% endif %}
         {% endblock %}
     </body>

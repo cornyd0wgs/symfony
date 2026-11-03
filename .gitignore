@@ -9,6 +9,12 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/

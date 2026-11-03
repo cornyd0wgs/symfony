@@ -28,21 +28,24 @@
                 <li>
                     <a href="{{ current_page|default('') == 'home' ? '#home' : path('app_home') ~ '#home' }}"
                        class="nav-link {{ current_page|default('') == 'home' ? 'active' : '' }}"
-                       data-nav-key="home">
+                       data-nav-key="home"
+                       data-section="home">
                         HOME
                     </a>
                 </li>
                 <li>
                     <a href="{{ current_page|default('') == 'home' ? '#about' : path('app_home') ~ '#about' }}"
                        class="nav-link"
-                       data-nav-key="about">
+                       data-nav-key="about"
+                       data-section="about">
                         ABOUT
                     </a>
                 </li>
                 <li>
                     <a href="{{ current_page|default('') == 'home' ? '#drop' : path('app_home') ~ '#drop' }}"
                        class="nav-link"
-                       data-nav-key="drop">
+                       data-nav-key="drop"
+                       data-section="drop">
                         ACTIVE DROP
                     </a>
                 </li>
@@ -67,11 +70,11 @@
                     <a href="{{ path('app_cart') }}"
                        class="nav-link {{ current_page|default('') == 'cart' ? 'active' : '' }}"
                        data-nav-key="cart">
-                        CART <span class="cart-badge">2</span>
+                        CART {% if cart_count|default(0) > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
                     </a>
                 </li>
 
-                {% if app.session.get('user_role') == 'admin' %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li>
                         <a href="{{ path('admin_dashboard') }}"
                            class="nav-link"
@@ -85,7 +88,7 @@
                             LOGOUT
                         </a>
                     </li>
-                {% elseif app.session.has('user_id') %}
+                {% elseif is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li>
                         <a href="{{ path('app_account_dashboard') }}"
                            class="nav-link {{ current_page|default('') == 'account' ? 'active' : '' }}"
@@ -104,14 +107,6 @@
                            class="nav-link {{ current_page|default('') == 'login' ? 'active' : '' }}"
                            data-nav-key="login">
                             LOGIN
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('admin_dashboard') }}"
-                           class="nav-link"
-                           data-nav-key="admin"
-                           style="color: var(--color-accent); font-weight: 800;">
-                            // ADMIN
                         </a>
                     </li>
                 {% endif %}
