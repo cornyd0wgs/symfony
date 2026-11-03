@@ -7,70 +7,52 @@
 
 <main id="main">
     <section class="auth-section">
-        <div class="container auth-container" style="max-width: 480px; margin: 0 auto; padding-top: 40px; padding-bottom: 80px;">
+        <div class="container auth-container">
             <p class="tech-label">// NEW_OPERATOR_REGISTRATION</p>
-            <h1 class="section-heading" style="font-size: 32px; margin-bottom: 24px;">CREATE ACCOUNT</h1>
+            <h1 class="section-heading">CREATE AN ACCOUNT</h1>
 
             {% if errors is not empty %}
-                <ul class="form-message form-message-error" style="color: #ff9d6e; border: 1px solid #592e18; background: rgba(255,106,0,.05); padding: 12px 14px 12px 30px; margin-bottom: 20px; font-size: 13px;">
+                <ul class="form-message form-message-error">
                     {% for err in errors %}
                         <li>{{ err }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
 
-            <form class="auth-form" method="post" action="{{ path('app_register') }}" style="display: flex; flex-direction: column; gap: 18px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div class="form-row">
-                        <label for="first_name" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                            FIRST NAME
-                        </label>
-                        <input type="text" id="first_name" name="first_name" required value="{{ data.first_name|default('') }}" placeholder="Marcus" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
-                    </div>
-                    <div class="form-row">
-                        <label for="last_name" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                            LAST NAME
-                        </label>
-                        <input type="text" id="last_name" name="last_name" required value="{{ data.last_name|default('') }}" placeholder="Vance" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
-                    </div>
+            <form class="auth-form" method="post" action="{{ path('app_register') }}">
+                <div class="form-row">
+                    <label for="full_name">FULL NAME</label>
+                    <input type="text" id="full_name" name="full_name" required value="{{ data.full_name|default('') }}" placeholder="e.g. Elena Rostova" autocomplete="name">
                 </div>
 
                 <div class="form-row">
-                    <label for="email" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                        COMMS EMAIL
-                    </label>
-                    <input type="email" id="email" name="email" required value="{{ data.email|default('') }}" placeholder="operator@domain.com" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    <label for="email">EMAIL</label>
+                    <input type="email" id="email" name="email" required value="{{ data.email|default('') }}" placeholder="operator@domain.com" autocomplete="email">
                 </div>
 
                 <div class="form-row">
-                    <label for="phone" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                        CONTACT PHONE (OPTIONAL)
-                    </label>
-                    <input type="text" id="phone" name="phone" value="{{ data.phone|default('') }}" placeholder="+63 917 000 0000" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    <label for="age">AGE</label>
+                    <input type="number" id="age" name="age" min="1" max="100" required value="{{ data.age|default('') }}" placeholder="28">
                 </div>
 
                 <div class="form-row">
-                    <label for="password" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                        SECURITY PASSCODE (MIN. 8 CHARS)
-                    </label>
-                    <input type="password" id="password" name="password" minlength="8" required placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    <label for="password">PASSWORD</label>
+                    <input type="password" id="password" name="password" minlength="8" required placeholder="••••••••" autocomplete="new-password">
                 </div>
 
                 <div class="form-row">
-                    <label for="confirm_password" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                        CONFIRM PASSCODE
-                    </label>
-                    <input type="password" id="confirm_password" name="confirm_password" minlength="8" required placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;">
+                    <label for="confirm_password">CONFIRM PASSWORD</label>
+                    <input type="password" id="confirm_password" name="confirm_password" minlength="8" required placeholder="••••••••" autocomplete="new-password">
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
-                    INITIALIZE ACCOUNT <span class="arrow">→</span>
+                <button type="submit" class="btn btn-primary">
+                    CREATE ACCOUNT <span class="arrow">→</span>
                 </button>
             </form>
 
-            <div class="auth-switch" style="margin-top: 24px; text-align: center; font-size: 11px; color: var(--color-gray);">
-                Already have an operator account? <a href="{{ path('app_login') }}" style="color: var(--color-accent); font-weight: 700;">Sign in here</a>
-            </div>
+            <p class="auth-switch">
+                Already have an account? <a href="{{ path('app_login') }}">Log in</a>
+            </p>
         </div>
     </section>
 </main>

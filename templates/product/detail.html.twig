@@ -10,7 +10,7 @@
         <div class="container">
             <div class="section-rail">
                 <span></span>
-                <p>GEAR_SPECIFICATION // {{ product.product_code }}</p>
+                <p>GEAR_SPECIFICATION // {{ product.sku }}</p>
             </div>
 
             <div class="ethos-grid">
@@ -89,7 +89,6 @@
                             <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">
                                 DEPLETED FROM VAULT
                             </button>
-                        {% endif %}
                         {% endif %}
                         <a href="{{ path('app_products') }}" class="btn btn-outline">
                             BACK TO VAULT

@@ -7,29 +7,27 @@
 
 <main id="main">
     <section class="auth-section">
-        <div class="container auth-container" style="max-width: 480px; margin: 0 auto; padding-top: 40px; padding-bottom: 80px;">
+        <div class="container auth-container">
             <p class="tech-label">// SECURE_LOGIN</p>
-            <h1 class="section-heading" style="font-size: 32px; margin-bottom: 24px;">LOG IN</h1>
-
-            <div style="background: rgba(255, 106, 0, 0.08); border: 1px solid rgba(255, 106, 0, 0.3); padding: 12px 14px; margin-bottom: 20px; font-size: 11px; font-family: var(--font-ui); color: #ddd;">
-                <strong style="color: var(--color-accent); display: block; margin-bottom: 4px;">// FIELD-ACCESS DEMO ACCOUNTS</strong>
-                • <strong>Admin:</strong> <code>admin@caballeroindustries.com</code> | <code>Admin123!</code><br>
-                • <strong>Customer:</strong> Any email and password (or register below)
-            </div>
+            <h1 class="section-heading">LOG IN</h1>
 
             {% if error %}
-                <div class="form-message form-message-error" style="color: #ff9d6e; border: 1px solid #592e18; background: rgba(255,106,0,.05); padding: 12px 14px; margin-bottom: 20px; font-size: 13px;">
-                    {{ error }}
-                </div>
+                <ul class="form-message form-message-error">
+                    <li>{{ error }}</li>
+                </ul>
             {% endif %}
 
-            <form class="auth-form" method="post" action="{{ path('app_login') }}" style="display: flex; flex-direction: column; gap: 18px;">
+            {% for message in app.flashes('success') %}
+                <div class="form-message form-message-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <form class="auth-form" method="post" action="{{ path('app_login') }}">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                 <div class="form-row">
-                    <label for="email" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                        OPERATOR EMAIL
-                    </label>
+                    <label for="email">EMAIL</label>
                     <input
                         type="email"
                         id="email"
@@ -37,33 +35,31 @@
                         required
                         value="{{ last_username|default('') }}"
                         placeholder="operator@domain.com"
-                        style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;"
+                        autocomplete="email"
                     >
                 </div>
 
                 <div class="form-row">
-                    <label for="password" style="display: block; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 6px;">
-                        SECURITY PASSCODE
-                    </label>
+                    <label for="password">PASSWORD</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
                         required
                         placeholder="••••••••"
-                        style="width: 100%; padding: 12px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 13px;"
+                        autocomplete="current-password"
                     >
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
-                    VERIFY IDENTITY <span class="arrow">→</span>
+                <button type="submit" class="btn btn-primary">
+                    LOG IN <span class="arrow">→</span>
                 </button>
             </form>
 
-            <div class="auth-switch auth-switch-panel" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--color-border); text-align: center;">
-                <span style="font-size: 11px; color: var(--color-gray); letter-spacing: 0.1em; display: block; margin-bottom: 12px;">NEW TO CABALLERO TACTICAL?</span>
-                <a class="btn btn-secondary auth-signup-btn" href="{{ path('app_register') }}" style="display: inline-block;">
-                    REGISTER OPERATOR <span class="arrow">→</span>
+            <div class="auth-switch auth-switch-panel">
+                <span>DON'T HAVE AN ACCOUNT?</span>
+                <a class="btn btn-secondary auth-signup-btn" href="{{ path('app_register') }}">
+                    CREATE ACCOUNT <span class="arrow">→</span>
                 </a>
             </div>
         </div>

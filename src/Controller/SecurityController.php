@@ -55,28 +55,26 @@ final class SecurityController extends AbstractController
 
         $errors = [];
         $data = [
-            'first_name' => '',
-            'last_name' => '',
+            'full_name' => '',
             'email' => '',
-            'phone' => '',
+            'age' => '',
         ];
 
         if ($request->isMethod('POST')) {
-            $data['first_name'] = trim((string) $request->request->get('first_name'));
-            $data['last_name'] = trim((string) $request->request->get('last_name'));
+            $data['full_name'] = trim((string) $request->request->get('full_name'));
             $data['email'] = trim((string) $request->request->get('email'));
-            $data['phone'] = trim((string) $request->request->get('phone'));
+            $data['age'] = trim((string) $request->request->get('age'));
             $password = (string) $request->request->get('password');
             $confirmPassword = (string) $request->request->get('confirm_password');
 
-            if (empty($data['first_name'])) {
-                $errors[] = 'First name is required.';
-            }
-            if (empty($data['last_name'])) {
-                $errors[] = 'Last name is required.';
+            if (empty($data['full_name'])) {
+                $errors[] = 'Please enter your real name using letters only (no numbers or symbols).';
             }
             if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                $errors[] = 'Please provide a valid email address.';
+                $errors[] = 'Please enter a valid email address.';
+            }
+            if (!is_numeric($data['age']) || (int)$data['age'] < 1 || (int)$data['age'] > 100) {
+                $errors[] = 'Age must be a number between 1 and 100.';
             }
             if (strlen($password) < 8) {
                 $errors[] = 'Password must be at least 8 characters long.';
@@ -92,11 +90,14 @@ final class SecurityController extends AbstractController
             }
 
             if (empty($errors)) {
+                $parts = explode(' ', $data['full_name'], 2);
+                $firstName = $parts[0];
+                $lastName = $parts[1] ?? '';
+
                 $user = new User();
                 $user->setEmail($data['email'])
-                    ->setFirstname($data['first_name'])
-                    ->setLastname($data['last_name'])
-                    ->setPhone($data['phone'] ?: null)
+                    ->setFirstname($firstName)
+                    ->setLastname($lastName)
                     ->setStatus('active')
                     ->setRoles(['ROLE_USER'])
                     ->setCreatedat(new \DateTimeImmutable());
@@ -107,7 +108,7 @@ final class SecurityController extends AbstractController
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Tactical clearance issued. Account registered successfully. Please sign in.');
+                $this->addFlash('success', 'Account created successfully. Please log in.');
                 return $this->redirectToRoute('app_login');
             }
         }

@@ -28,15 +28,6 @@
                 {% for product in products %}
                     <a href="{{ path('app_product_detail', {id: product.id}) }}" class="product-card">
                         <div class="product-image">
-                            <div class="product-tags">
-                                {% if product.isfeatured %}
-                                    <span class="slant-tag slant-tag-popular"><span>FEATURED</span></span>
-                                {% endif %}
-                                {% if product.discountPercent > 0 %}
-                                    <span class="slant-tag slant-tag-sale"><span>-{{ product.discountPercent }}%</span></span>
-                                {% endif %}
-                            </div>
-
                             {% if product.totalStock == 0 %}
                                 <span class="product-tag product-tag-soldout">OUT OF STOCK</span>
                             {% elseif product.totalStock <= 3 %}
@@ -46,6 +37,15 @@
                             {% else %}
                                 <span class="product-tag">IN STOCK</span>
                             {% endif %}
+
+                            <div class="product-tags" style="top: 44px;">
+                                {% if product.isfeatured %}
+                                    <span class="slant-tag slant-tag-popular"><span>FEATURED</span></span>
+                                {% endif %}
+                                {% if product.discountPercent > 0 %}
+                                    <span class="slant-tag slant-tag-sale"><span>-{{ product.discountPercent }}%</span></span>
+                                {% endif %}
+                            </div>
 
                             <img src="{{ asset('images/jacket.png') }}" alt="{{ product.name }}">
                             <span class="product-corner" aria-hidden="true">CI</span>
