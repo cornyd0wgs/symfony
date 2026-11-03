@@ -33,6 +33,7 @@
                                 <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em;">UNIT PRICE</th>
                                 <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em; text-align: center;">QTY</th>
                                 <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em; text-align: right;">SUBTOTAL</th>
+                                <th style="padding: 12px 14px; font-family: var(--font-ui); font-size: 10px; color: var(--color-gray-soft); letter-spacing: 0.15em; text-align: center;">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,6 +56,19 @@
                                     </td>
                                     <td style="padding: 16px 14px; text-align: right; font-family: var(--font-heading); font-size: 14px; color: var(--color-accent);">
                                         ₱{{ item.subtotal|number_format(2) }}
+                                    </td>
+                                    <td style="padding: 16px 14px; text-align: center;">
+                                        <form method="post" action="{{ path('app_cart_remove', {id: item.id}) }}" style="display: inline;">
+                                            <button type="submit" style="background: none; border: none; color: #ff3c00; cursor: pointer; font-size: 11px; font-family: var(--font-ui); letter-spacing: 0.1em;">
+                                                [REMOVE]
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" style="padding: 32px 14px; text-align: center; color: var(--color-gray-soft); font-family: var(--font-ui); font-size: 12px;">
+                                        NO ASSETS ALLOCATED TO CART MANIFEST.
                                     </td>
                                 </tr>
                             {% endfor %}

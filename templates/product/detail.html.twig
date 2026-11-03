@@ -17,8 +17,8 @@
                 <figure class="ethos-image">
                     <div class="image-frame-corner image-frame-corner-a" aria-hidden="true"></div>
                     <div class="image-frame-corner image-frame-corner-b" aria-hidden="true"></div>
-                    <img src="{{ asset(product.image) }}" alt="{{ product.name }}">
-                    <figcaption>{{ product.product_code }} // {{ product.category }}</figcaption>
+                    <img src="{{ asset('images/jacket.png') }}" alt="{{ product.name }}">
+                    <figcaption>{{ product.sku }} // {{ product.category ? product.category.name : 'TACTICAL' }}</figcaption>
                 </figure>
 
                 <div class="ethos-text">
@@ -28,23 +28,25 @@
                     </h1>
 
                     <p style="font-family: var(--font-ui); font-size: 11px; color: var(--color-gray-soft); letter-spacing: 0.14em; margin-bottom: 24px;">
-                        ITEM REF: {{ product.product_code }} &bull; CATEGORY: {{ product.category }}
+                        ITEM REF: {{ product.sku }} &bull; CATEGORY: {{ product.category ? product.category.name : 'TACTICAL' }}
                     </p>
 
                     <div style="margin-bottom: 28px;">
-                        {% if product.discount_price %}
+                        {% if product.saleprice %}
                             <div style="display: flex; align-items: baseline; gap: 14px;">
                                 <span style="font-size: 28px; font-weight: 900; color: var(--color-accent); font-family: var(--font-heading);">
-                                    ₱{{ product.discount_price|number_format(2) }}
+                                    ₱{{ product.saleprice|number_format(2) }}
                                 </span>
                                 <span style="font-size: 18px; color: #686d70; text-decoration: line-through; font-family: var(--font-heading);">
-                                    ₱{{ product.price|number_format(2) }}
+                                    ₱{{ product.baseprice|number_format(2) }}
                                 </span>
-                                <span class="badge-flag" style="font-size: 10px; padding: 4px 8px;">SAVE {{ product.discount }}%</span>
+                                {% if product.discountPercent > 0 %}
+                                    <span class="badge-flag" style="font-size: 10px; padding: 4px 8px;">SAVE {{ product.discountPercent }}%</span>
+                                {% endif %}
                             </div>
                         {% else %}
                             <span style="font-size: 28px; font-weight: 900; color: var(--color-accent); font-family: var(--font-heading);">
-                                ₱{{ product.price|number_format(2) }}
+                                ₱{{ product.baseprice|number_format(2) }}
                             </span>
                         {% endif %}
                     </div>
@@ -56,20 +58,29 @@
                     <div style="background: #111518; border: 1px solid var(--color-border); padding: 18px 22px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
                         <div>
                             <span style="display: block; font-size: 9px; color: #777d80; letter-spacing: 0.12em; text-transform: uppercase;">STOCK STATUS</span>
-                            <strong style="color: {{ product.quantity == 0 ? '#ff3c00' : (product.quantity <= 3 ? 'var(--color-accent)' : '#fff') }}; font-size: 12px;">
-                                {% if product.quantity == 0 %}OUT OF STOCK{% elseif product.quantity <= 3 %}CRITICAL STOCK ({{ product.quantity }} REMAINING){% else %}IN STOCK ({{ product.quantity }} ALLOCATED){% endif %}
+                            <strong style="color: {{ product.totalStock == 0 ? '#ff3c00' : (product.totalStock <= 3 ? 'var(--color-accent)' : '#fff') }}; font-size: 12px;">
+                                {% if product.totalStock == 0 %}OUT OF STOCK{% elseif product.totalStock <= 3 %}CRITICAL STOCK ({{ product.totalStock }} REMAINING){% else %}IN STOCK ({{ product.totalStock }} ALLOCATED){% endif %}
                             </strong>
                         </div>
                         <div>
-                            <span style="display: block; font-size: 9px; color: #777d80; letter-spacing: 0.12em; text-transform: uppercase;">FIELD VERIFICATION</span>
-                            <strong style="color: #fff; font-size: 12px;">{{ product.units_sold }} UNITS FIELD-TESTED</strong>
+                            <span style="display: block; font-size: 9px; color: #777d80; letter-spacing: 0.12em; text-transform: uppercase;">CONFIGURATIONS</span>
+                            <strong style="color: #fff; font-size: 12px;">{{ product.variants|length }} FIELD VARIANTS AVAILABLE</strong>
                         </div>
                     </div>
 
                     <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-                        {% if product.quantity > 0 %}
-                            <form method="post" action="{{ path('app_cart_add', {id: product.id}) }}" style="display: inline;">
-                                <input type="hidden" name="quantity" value="1">
+                        {% if product.totalStock > 0 %}
+                            <form method="post" action="{{ path('app_cart_add', {id: product.id}) }}" style="display: inline-flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                {% if product.variants|length > 1 %}
+                                    <select name="variant_id" style="padding: 10px 14px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 12px;">
+                                        {% for variant in product.variants %}
+                                            <option value="{{ variant.id }}" {{ variant.stockquantity == 0 ? 'disabled' : '' }}>
+                                                {{ variant.variantname ?: variant.color ~ ' / ' ~ variant.size }} (Stock: {{ variant.stockquantity }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                                <input type="number" name="quantity" value="1" min="1" max="10" style="width: 60px; padding: 10px 12px; background: #0c0f11; border: 1px solid var(--color-border); color: #fff; font-family: var(--font-ui); font-size: 12px; text-align: center;">
                                 <button type="submit" class="btn btn-primary" style="min-width: 200px;">
                                     ALLOCATE TO BAG <span class="arrow">→</span>
                                 </button>
@@ -78,6 +89,7 @@
                             <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">
                                 DEPLETED FROM VAULT
                             </button>
+                        {% endif %}
                         {% endif %}
                         <a href="{{ path('app_products') }}" class="btn btn-outline">
                             BACK TO VAULT

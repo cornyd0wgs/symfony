@@ -8,9 +8,9 @@
 
         {% block stylesheets %}
             {% if app.request.pathInfo starts with '/admin' %}
-                <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+                <link rel="stylesheet" href="/css/admin.css">
             {% else %}
-                <link rel="stylesheet" href="{{ asset('style.css') }}">
+                <link rel="stylesheet" href="/style.css">
             {% endif %}
         {% endblock %}
 
