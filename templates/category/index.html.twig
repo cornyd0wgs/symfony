@@ -1,39 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Category index{% endblock %}
+{% block title %}Category Index | Caballero Industries{% endblock %}
 
 {% block body %}
-    <h1>Category index</h1>
+<div class="container" style="padding: 40px 20px; max-width: 1000px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="margin: 0;">Category Management</h1>
+        <a href="{{ path('app_category_new') }}" class="btn btn-primary" style="padding: 10px 18px; text-decoration: none;">+ Create New Category</a>
+    </div>
 
-    <table class="table">
+    <table class="table" style="width: 100%; border-collapse: collapse; margin-top: 16px;">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>CategoryName</th>
-                <th>Description</th>
-                <th>Categoryname</th>
-                <th>actions</th>
+            <tr style="border-bottom: 2px solid #333; text-align: left;">
+                <th style="padding: 12px 8px;">ID</th>
+                <th style="padding: 12px 8px;">Name</th>
+                <th style="padding: 12px 8px;">Slug</th>
+                <th style="padding: 12px 8px;">Status</th>
+                <th style="padding: 12px 8px;">Description</th>
+                <th style="padding: 12px 8px;">Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for category in categories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.categoryName }}</td>
-                <td>{{ category.description }}</td>
-                <td>{{ category.categoryname }}</td>
-                <td>
-                    <a href="{{ path('app_category_show', {'id': category.id}) }}">show</a>
-                    <a href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
+            <tr style="border-bottom: 1px solid #222;">
+                <td style="padding: 12px 8px;">#{{ category.id }}</td>
+                <td style="padding: 12px 8px;"><strong>{{ category.name }}</strong></td>
+                <td style="padding: 12px 8px;"><code>{{ category.slug }}</code></td>
+                <td style="padding: 12px 8px;">
+                    <span style="padding: 2px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase; background: {{ category.status == 'active' ? '#1b4332' : '#49111c' }}; color: {{ category.status == 'active' ? '#74c69d' : '#ff8fa3' }};">
+                        {{ category.status }}
+                    </span>
+                </td>
+                <td style="padding: 12px 8px; color: #a0a0a0;">{{ category.description|u.truncate(50, '...') }}</td>
+                <td style="padding: 12px 8px;">
+                    <a href="{{ path('app_category_show', {'id': category.id}) }}" style="color: #ff6500; text-decoration: none; margin-right: 12px;">View</a>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" style="color: #ccc; text-decoration: none;">Edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="6" style="padding: 24px; text-align: center; color: #888;">No categories found.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_category_new') }}">Create new</a>
+</div>
 {% endblock %}

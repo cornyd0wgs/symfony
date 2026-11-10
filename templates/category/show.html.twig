@@ -1,34 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %}Category #{{ category.id }} | Caballero Industries{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
+<div class="container" style="padding: 40px 20px; max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="margin: 0;">Category Details</h1>
+        <div>
+            <a href="{{ path('app_category_index') }}" class="btn" style="color: #aaa; text-decoration: none; margin-right: 12px;">← Back to List</a>
+            <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-primary" style="padding: 8px 16px; text-decoration: none;">Edit Category</a>
+        </div>
+    </div>
 
-    <table class="table">
+    <table class="table" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ category.id }}</td>
+            <tr style="border-bottom: 1px solid #222;">
+                <th style="padding: 12px 8px; width: 160px; text-align: left; color: #888;">ID</th>
+                <td style="padding: 12px 8px;">#{{ category.id }}</td>
             </tr>
-            <tr>
-                <th>CategoryName</th>
-                <td>{{ category.categoryName }}</td>
+            <tr style="border-bottom: 1px solid #222;">
+                <th style="padding: 12px 8px; text-align: left; color: #888;">Name</th>
+                <td style="padding: 12px 8px;"><strong>{{ category.name }}</strong></td>
             </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ category.description }}</td>
+            <tr style="border-bottom: 1px solid #222;">
+                <th style="padding: 12px 8px; text-align: left; color: #888;">Slug</th>
+                <td style="padding: 12px 8px;"><code>{{ category.slug }}</code></td>
             </tr>
-            <tr>
-                <th>Categoryname</th>
-                <td>{{ category.categoryname }}</td>
+            <tr style="border-bottom: 1px solid #222;">
+                <th style="padding: 12px 8px; text-align: left; color: #888;">Status</th>
+                <td style="padding: 12px 8px;">
+                    <span style="padding: 2px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase; background: {{ category.status == 'active' ? '#1b4332' : '#49111c' }}; color: {{ category.status == 'active' ? '#74c69d' : '#ff8fa3' }};">
+                        {{ category.status }}
+                    </span>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #222;">
+                <th style="padding: 12px 8px; text-align: left; color: #888;">Image</th>
+                <td style="padding: 12px 8px;">{{ category.image|default('None') }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #222;">
+                <th style="padding: 12px 8px; text-align: left; color: #888;">Description</th>
+                <td style="padding: 12px 8px; color: #ccc;">{{ category.description|default('No description provided.') }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_category_index') }}">back to list</a>
-
-    <a href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
-
-    {{ include('category/_delete_form.html.twig') }}
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #222;">
+        {{ include('category/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

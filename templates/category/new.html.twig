@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Category{% endblock %}
+{% block title %}Create New Category | Caballero Industries{% endblock %}
 
 {% block body %}
-    <h1>Create new Category</h1>
+<div class="container" style="padding: 40px 20px; max-width: 650px; margin: 0 auto;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('app_category_index') }}" style="color: #aaa; text-decoration: none; font-size: 13px;">← Back to Category List</a>
+        <h1 style="margin-top: 12px;">Create New Category</h1>
+    </div>
 
-    {{ include('category/_form.html.twig') }}
-
-    <a href="{{ path('app_category_index') }}">back to list</a>
+    <div style="background: #111417; border: 1px solid #222; border-radius: 6px; padding: 24px;">
+        {{ include('category/_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}
