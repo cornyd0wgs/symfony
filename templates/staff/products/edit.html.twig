@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Record #{{ product.id }} | Staff Operations{% endblock %}
+
+{% block body %}
+{% include 'partials/store_header.html.twig' %}
+
+<main id="main" style="padding: 40px 20px; max-width: 750px; margin: 0 auto;">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ path('staff_products_index') }}" style="color: #aaa; text-decoration: none; font-size: 13px;">← Back to Operational Records</a>
+        <h1 style="margin-top: 12px; font-size: 26px;">Edit Product: {{ product.name }}</h1>
+        <p style="color: #888; font-size: 13px;">Modify product details and pricing.</p>
+    </div>
+
+    <div style="background: #111417; border: 1px solid #222; border-radius: 6px; padding: 28px; margin-bottom: 24px;">
+        {{ form_start(form) }}
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+                <div>
+                    <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">PRODUCT NAME</label>
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">SKU (UNIQUE CODE)</label>
+                        {{ form_widget(form.sku) }}
+                        {{ form_errors(form.sku) }}
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">URL SLUG</label>
+                        {{ form_widget(form.slug) }}
+                        {{ form_errors(form.slug) }}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">CATEGORY</label>
+                        {{ form_widget(form.category) }}
+                        {{ form_errors(form.category) }}
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">STATUS</label>
+                        {{ form_widget(form.status) }}
+                        {{ form_errors(form.status) }}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">BASE PRICE (PHP)</label>
+                        {{ form_widget(form.baseprice) }}
+                        {{ form_errors(form.baseprice) }}
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">SALE PRICE (PHP)</label>
+                        {{ form_widget(form.saleprice) }}
+                        {{ form_errors(form.saleprice) }}
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    {{ form_widget(form.isfeatured) }}
+                    <label for="{{ form.isfeatured.vars.id }}" style="font-size: 13px; color: #ccc;">Feature this item in highlights</label>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">DESCRIPTION</label>
+                    {{ form_widget(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 10px; align-items: center;">
+                    <button type="submit" class="btn btn-primary" style="padding: 11px 22px; font-weight: 700; cursor: pointer;">
+                        UPDATE PRODUCT RECORD
+                    </button>
+                    <a href="{{ path('staff_products_index') }}" style="color: #888; text-decoration: none; font-size: 13px;">Cancel</a>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+    <!-- Danger Zone: Delete Record -->
+    <div style="border-top: 1px solid #222; padding-top: 20px;">
+        <form method="post" action="{{ path('staff_products_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete this record? This action cannot be undone.');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+            <button type="submit" class="btn" style="background: #dc3545; color: #fff; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer;">
+                DELETE RECORD
+            </button>
+        </form>
+    </div>
+</main>
+
+{% include 'partials/store_footer.html.twig' %}
+{% endblock %}

@@ -21,6 +21,9 @@ final class SecurityController extends AbstractController
             if ($this->isGranted('ROLE_ADMIN')) {
                 return $this->redirectToRoute('admin_dashboard');
             }
+            if ($this->isGranted('ROLE_STAFF')) {
+                return $this->redirectToRoute('staff_dashboard');
+            }
             return $this->redirectToRoute('app_account_dashboard');
         }
 
@@ -61,6 +64,10 @@ final class SecurityController extends AbstractController
         ];
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('register', (string) $request->request->get('_csrf_token'))) {
+                $errors[] = 'Invalid or expired security token. Please try submitting again.';
+            }
+
             $data['full_name'] = trim((string) $request->request->get('full_name'));
             $data['email'] = trim((string) $request->request->get('email'));
             $data['age'] = trim((string) $request->request->get('age'));

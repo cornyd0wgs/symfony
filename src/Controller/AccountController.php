@@ -2,53 +2,54 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/account')]
+#[IsGranted('ROLE_USER')]
 final class AccountController extends AbstractController
 {
     #[Route('', name: 'app_account_dashboard')]
-    public function dashboard(SessionInterface $session): Response
+    public function dashboard(): Response
     {
-        $userName = $session->get('user_name', 'Operator Marcus');
-        $userRole = $session->get('user_role', 'customer');
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        $userName = $currentUser->getFirstname() . ' ' . $currentUser->getLastname();
+        $userEmail = $currentUser->getEmail();
 
         $user = [
             'full_name' => $userName,
-            'email' => 'operator.vance@tactical.io',
+            'email' => $userEmail,
             'age' => 32,
-            'created_at' => '2026-04-12 10:15:00',
+            'created_at' => $currentUser->getCreatedat() ? $currentUser->getCreatedat()->format('Y-m-d H:i:s') : '2026-04-12 10:15:00',
         ];
 
-        $orderCount = 4;
-        $completedCount = 3;
-        $totalSpent = 15910.00;
-        $cartCount = 2;
+        $orderCount = count($currentUser->getOrders());
+        $completedCount = 0;
+        foreach ($currentUser->getOrders() as $order) {
+            if ($order->getStatus() === 'completed') {
+                $completedCount++;
+            }
+        }
+        $totalSpent = 0.00;
+        $cartCount = count($currentUser->getCarts());
 
-        $recentOrders = [
-            [
-                'id' => 1042,
-                'total_amount' => 6450.00,
-                'status' => 'completed',
-                'created_at' => '2026-10-06 08:30:00',
-            ],
-            [
-                'id' => 1039,
-                'total_amount' => 8150.00,
-                'status' => 'completed',
-                'created_at' => '2026-10-05 14:10:00',
-            ],
-            [
-                'id' => 1035,
-                'total_amount' => 1310.00,
-                'status' => 'processing',
-                'created_at' => '2026-09-22 11:20:00',
-            ],
-        ];
+        $recentOrders = [];
+        foreach ($currentUser->getOrders() as $o) {
+            $recentOrders[] = [
+                'id' => $o->getId(),
+                'total_amount' => (float) $o->getTotalAmount(),
+                'status' => $o->getStatus(),
+                'created_at' => $o->getCreatedAt()->format('Y-m-d H:i:s'),
+            ];
+        }
 
         return $this->render('account/dashboard.html.twig', [
             'current_page' => 'account',
@@ -65,50 +66,26 @@ final class AccountController extends AbstractController
     #[Route('/orders', name: 'app_account_orders')]
     public function orders(): Response
     {
-        $orders = [
-            [
-                'id' => 1042,
-                'recipient_name' => 'Marcus Vance',
-                'contact_number' => '+63 917 555 0192',
-                'delivery_address' => '404 Tactical Way, Sector 7',
-                'city' => 'Taguig',
-                'province' => 'Metro Manila',
-                'postal_code' => '1634',
-                'payment_method' => 'GCash',
-                'gcash_reference' => 'GC-99382104',
-                'total_amount' => 6450.00,
-                'status' => 'completed',
-                'created_at' => '2026-10-06 08:30:00',
-            ],
-            [
-                'id' => 1039,
-                'recipient_name' => 'Marcus Vance',
-                'contact_number' => '+63 917 555 0192',
-                'delivery_address' => '404 Tactical Way, Sector 7',
-                'city' => 'Taguig',
-                'province' => 'Metro Manila',
-                'postal_code' => '1634',
-                'payment_method' => 'Bank Transfer',
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        $orders = [];
+        foreach ($currentUser->getOrders() as $order) {
+            $orders[] = [
+                'id' => $order->getId(),
+                'recipient_name' => $order->getShippingRecipient(),
+                'contact_number' => $order->getShppingPhone() ?? '—',
+                'delivery_address' => $order->getShippingAddress(),
+                'city' => $order->getShippingCity(),
+                'province' => $order->getShippingProvince(),
+                'postal_code' => $order->getShippingPostalCode(),
+                'payment_method' => 'Standard',
                 'gcash_reference' => null,
-                'total_amount' => 8150.00,
-                'status' => 'completed',
-                'created_at' => '2026-10-05 14:10:00',
-            ],
-            [
-                'id' => 1035,
-                'recipient_name' => 'Marcus Vance',
-                'contact_number' => '+63 917 555 0192',
-                'delivery_address' => '404 Tactical Way, Sector 7',
-                'city' => 'Taguig',
-                'province' => 'Metro Manila',
-                'postal_code' => '1634',
-                'payment_method' => 'Cash on Delivery',
-                'gcash_reference' => null,
-                'total_amount' => 1310.00,
-                'status' => 'processing',
-                'created_at' => '2026-09-22 11:20:00',
-            ],
-        ];
+                'total_amount' => (float) $order->getTotalAmount(),
+                'status' => $order->getStatus(),
+                'created_at' => $order->getCreatedAt()->format('Y-m-d H:i:s'),
+            ];
+        }
 
         return $this->render('account/orders.html.twig', [
             'current_page' => 'account',
@@ -118,12 +95,17 @@ final class AccountController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_account_profile', methods: ['GET', 'POST'])]
-    public function profile(Request $request, SessionInterface $session): Response
-    {
-        $userName = $session->get('user_name', 'Marcus Vance');
+    public function profile(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager
+    ): Response {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         $user = [
-            'full_name' => $userName,
-            'email' => 'operator.vance@tactical.io',
+            'full_name' => trim($currentUser->getFirstname() . ' ' . $currentUser->getLastname()),
+            'email' => $currentUser->getEmail(),
             'age' => 32,
         ];
 
@@ -131,18 +113,35 @@ final class AccountController extends AbstractController
         $success = null;
 
         if ($request->isMethod('POST')) {
-            $user['full_name'] = trim((string) $request->request->get('full_name'));
-            $user['email'] = trim((string) $request->request->get('email'));
-            $user['age'] = (int) $request->request->get('age');
+            if (!$this->isCsrfTokenValid('account_profile', (string) $request->request->get('_csrf_token'))) {
+                $errors[] = 'Invalid or expired security token.';
+            }
+
+            $fullName = trim((string) $request->request->get('full_name'));
+            $email = trim((string) $request->request->get('email'));
+            $age = (int) $request->request->get('age');
             $newPassword = (string) $request->request->get('new_password');
             $confirmPassword = (string) $request->request->get('confirm_password');
 
-            if (empty($user['full_name'])) {
+            $user['full_name'] = $fullName;
+            $user['email'] = $email;
+            $user['age'] = $age;
+
+            if (empty($fullName)) {
                 $errors[] = 'Full name is required.';
             }
-            if (!filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = 'Valid email is required.';
             }
+
+            // Check if email changed and if another user has it
+            if ($email !== $currentUser->getEmail()) {
+                $existing = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+                if ($existing && $existing->getId() !== $currentUser->getId()) {
+                    $errors[] = 'This email is already in use by another account.';
+                }
+            }
+
             if (!empty($newPassword)) {
                 if (strlen($newPassword) < 8) {
                     $errors[] = 'New password must be at least 8 characters long.';
@@ -153,8 +152,20 @@ final class AccountController extends AbstractController
             }
 
             if (empty($errors)) {
-                $session->set('user_name', $user['full_name']);
-                $success = 'Profile & security settings updated successfully.';
+                $parts = explode(' ', $fullName, 2);
+                $currentUser->setFirstname($parts[0]);
+                $currentUser->setLastname($parts[1] ?? '');
+                $currentUser->setEmail($email);
+
+                // Live password hashing into the database
+                if (!empty($newPassword)) {
+                    $hashed = $passwordHasher->hashPassword($currentUser, $newPassword);
+                    $currentUser->setPassword($hashed);
+                }
+
+                $entityManager->flush();
+
+                $success = 'Profile & security credentials updated successfully.';
             }
         }
 

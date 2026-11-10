@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create User / Staff | Caballero Industries Admin{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+    {% include 'partials/sidebar.html.twig' %}
+
+    <main class="admin-main">
+        {% include 'partials/navbar.html.twig' %}
+
+        <section class="admin-content">
+            <div class="page-heading">
+                <div>
+                    <span class="eyebrow">// USER DIRECTORY</span>
+                    <h1>Create New User / Staff</h1>
+                    <p>Provision credentials and system permissions for staff members or administrators.</p>
+                </div>
+            </div>
+
+            <div class="admin-card" style="max-width: 640px; padding: 28px;">
+                {{ form_start(form) }}
+                    <div style="display: flex; flex-direction: column; gap: 18px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">FIRST NAME</label>
+                                {{ form_widget(form.firstname) }}
+                                {{ form_errors(form.firstname) }}
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">LAST NAME</label>
+                                {{ form_widget(form.lastname) }}
+                                {{ form_errors(form.lastname) }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">EMAIL ADDRESS</label>
+                            {{ form_widget(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">PHONE NUMBER (OPTIONAL)</label>
+                            {{ form_widget(form.phone) }}
+                            {{ form_errors(form.phone) }}
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">SYSTEM ROLE</label>
+                                {{ form_widget(form.roleChoice) }}
+                                {{ form_errors(form.roleChoice) }}
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">ACCOUNT STATUS</label>
+                                {{ form_widget(form.status) }}
+                                {{ form_errors(form.status) }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 11px; color: #858b91; letter-spacing: 0.08em; margin-bottom: 6px;">INITIAL PASSWORD</label>
+                            {{ form_widget(form.plainPassword) }}
+                            {{ form_errors(form.plainPassword) }}
+                            <small style="color: #6c757d; font-size: 11px; display: block; margin-top: 4px;">Minimum 8 characters.</small>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-top: 12px; align-items: center;">
+                            <button type="submit" class="admin-btn" style="background: var(--color-accent, #ff6500); color: #000; font-weight: 700; border: none; padding: 11px 22px; border-radius: 4px; cursor: pointer;">
+                                CREATE ACCOUNT
+                            </button>
+                            <a href="{{ path('admin_users_index') }}" style="color: #888; text-decoration: none; font-size: 13px;">Cancel</a>
+                        </div>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

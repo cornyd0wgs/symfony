@@ -88,6 +88,20 @@
                             LOGOUT
                         </a>
                     </li>
+                {% elseif is_granted('ROLE_STAFF') %}
+                    <li>
+                        <a href="{{ path('staff_dashboard') }}"
+                           class="nav-link"
+                           data-nav-key="staff"
+                           style="color: #64b5f6; font-weight: 800;">
+                            // STAFF PORTAL
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_logout') }}" class="nav-link" data-nav-key="logout">
+                            LOGOUT
+                        </a>
+                    </li>
                 {% elseif is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li>
                         <a href="{{ path('app_account_dashboard') }}"

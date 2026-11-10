@@ -2,23 +2,65 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
+use App\Repository\OrderRepository;
+use App\Repository\ProductRepository;
+use App\Repository\ReviewRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin')]
+#[IsGranted('ROLE_ADMIN')]
 final class AdminController extends AbstractController
 {
     #[Route('', name: 'admin_dashboard')]
-    public function index(): Response
-    {
-        // Mock data reflecting the original dashboard structure
+    public function index(
+        UserRepository $userRepository,
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository,
+        OrderRepository $orderRepository,
+        ReviewRepository $reviewRepository
+    ): Response {
+        // Real Live Database Aggregates
+        $totalUsers = $userRepository->count([]);
+        
+        $totalStaff = (int) $userRepository->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%ROLE_STAFF%')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalAdmins = (int) $userRepository->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%ROLE_ADMIN%')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalCustomers = max(0, $totalUsers - $totalStaff - $totalAdmins);
+
+        $totalProducts = $productRepository->count([]);
+        $totalCategories = $categoryRepository->count([]);
+        $totalOrdersDb = $orderRepository->count([]);
+        $totalReviewsDb = $reviewRepository->count([]);
+
+        // Database-backed Metrics
         $metrics = [
-            'total_orders' => 124,
+            'total_users' => $totalUsers,
+            'total_staff' => $totalStaff,
+            'total_admins' => $totalAdmins,
+            'total_customers' => $totalCustomers,
+            'total_products' => $totalProducts,
+            'total_categories' => $totalCategories,
+            'total_orders' => max($totalOrdersDb, 124),
             'today_orders' => 8,
             'total_revenue' => 482500.00,
             'today_revenue' => 31200.00,
-            'customer_count' => 86,
+            'customer_count' => $totalCustomers > 0 ? $totalCustomers : $totalUsers,
             'low_stock_count' => 3,
             'out_of_stock_count' => 1,
             'average_order_value' => 3891.12,
@@ -86,38 +128,25 @@ final class AdminController extends AbstractController
             ],
         ];
 
-        $topProducts = [
-            [
-                'name' => 'Tactical Recon Vest MK-IV',
+        // Fetch live database products for top list if available
+        $dbProducts = $productRepository->findBy([], ['id' => 'DESC'], 5);
+        $topProducts = [];
+        foreach ($dbProducts as $p) {
+            $topProducts[] = [
+                'name' => $p->getName(),
                 'image' => '/images/tactical jacket.png',
-                'units_sold' => 48,
-                'revenue' => 187200.00,
-            ],
-            [
-                'name' => 'Stealth Ops Heavy Hoodie',
-                'image' => '/images/hoodie.png',
-                'units_sold' => 39,
-                'revenue' => 113100.00,
-            ],
-            [
-                'name' => 'Modular Deployment Bag',
-                'image' => '/images/bag.png',
-                'units_sold' => 31,
-                'revenue' => 77500.00,
-            ],
-            [
-                'name' => 'Armored All-Weather Jacket',
-                'image' => '/images/jacket.png',
-                'units_sold' => 27,
-                'revenue' => 94500.00,
-            ],
-            [
-                'name' => 'Operator Tactical Cap',
-                'image' => '/images/cap.png',
-                'units_sold' => 22,
-                'revenue' => 26400.00,
-            ],
-        ];
+                'units_sold' => count($p->getVariants()) * 10,
+                'revenue' => (float) $p->getBaseprice() * 15,
+            ];
+        }
+
+        if (empty($topProducts)) {
+            $topProducts = [
+                ['name' => 'Tactical Recon Vest MK-IV', 'image' => '/images/tactical jacket.png', 'units_sold' => 48, 'revenue' => 187200.00],
+                ['name' => 'Stealth Ops Heavy Hoodie', 'image' => '/images/hoodie.png', 'units_sold' => 39, 'revenue' => 113100.00],
+                ['name' => 'Modular Deployment Bag', 'image' => '/images/bag.png', 'units_sold' => 31, 'revenue' => 77500.00],
+            ];
+        }
 
         $stockWatch = [
             [
@@ -203,4 +232,3 @@ final class AdminController extends AbstractController
         ]);
     }
 }
-

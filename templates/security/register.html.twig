@@ -20,6 +20,7 @@
             {% endif %}
 
             <form class="auth-form" method="post" action="{{ path('app_register') }}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
                 <div class="form-row">
                     <label for="full_name">FULL NAME</label>
                     <input type="text" id="full_name" name="full_name" required value="{{ data.full_name|default('') }}" placeholder="e.g. Elena Rostova" autocomplete="name">
